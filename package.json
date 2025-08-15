@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/maplibre-gl": "^1.14.0",
     "eslint": "^9.33.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
@@ -27,5 +28,12 @@
       "black",
       "isort"
     ]
+  },
+  "dependencies": {
+    "@deck.gl/react": "^9.1.14",
+    "@loaders.gl/core": "^4.3.4",
+    "@loaders.gl/json": "^4.3.4",
+    "deck.gl": "^9.1.14",
+    "maplibre-gl": "^5.6.2"
   }
 }
