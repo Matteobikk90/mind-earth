@@ -1,13 +1,12 @@
 import { FlatCompat } from "@eslint/eslintrc";
 import js from "@eslint/js";
 import pluginNext from "@next/eslint-plugin-next";
-import typescriptEslintPlugin from "@typescript-eslint/eslint-plugin";
 import prettierPlugin from "eslint-plugin-prettier";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 import reactRefreshPlugin from "eslint-plugin-react-refresh";
 import unusedImportsPlugin from "eslint-plugin-unused-imports";
 import { dirname, join } from "path";
-import tseslint from "typescript-eslint";
+import { default as tseslint } from "typescript-eslint";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -37,7 +36,7 @@ export default [
       parserOptions: {},
     },
     plugins: {
-      "@typescript-eslint": typescriptEslintPlugin,
+      "typescript-eslint": tseslint,
       "react-hooks": reactHooksPlugin,
       prettier: prettierPlugin,
       "react-refresh": reactRefreshPlugin,
@@ -45,7 +44,7 @@ export default [
     },
     rules: {
       ...js.configs.recommended.rules,
-      ...typescriptEslintPlugin.configs.recommended.rules,
+      ...tseslint.configs.recommended.rules,
       ...reactHooksPlugin.configs.recommended.rules,
       "react-refresh/only-export-components": "off",
       "no-unused-vars": "off",
@@ -62,18 +61,16 @@ export default [
     },
   },
 
-  ...compatFrontend
-    .extends("next/core-web-vitals", "next/typescript")
-    .map((cfg) => ({
-      ...cfg,
-      files: ["frontend/**/*.{js,jsx,ts,tsx}"],
-      plugins: {
-        ...(cfg.plugins ?? {}),
-        "@next/next": pluginNext,
-      },
-      rules: {
-        ...(cfg.rules ?? {}),
-        "@next/next/no-html-link-for-pages": "off",
-      },
-    })),
+  ...compatFrontend.extends("next/core-web-vitals", "next/typescript").map((cfg) => ({
+    ...cfg,
+    files: ["frontend/**/*.{js,jsx,ts,tsx}"],
+    plugins: {
+      ...(cfg.plugins ?? {}),
+      "@next/next": pluginNext,
+    },
+    rules: {
+      ...(cfg.rules ?? {}),
+      "@next/next/no-html-link-for-pages": "off",
+    },
+  })),
 ];
