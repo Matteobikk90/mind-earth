@@ -1,6 +1,6 @@
-from fastapi import FastAPI
-
-from .models import AOI, PopulationResponse
+from app.api.population import get_population_stats
+from app.models.population import AOI, PopulationResponse
+from fastapi import FastAPI, HTTPException
 
 app = FastAPI()
 
@@ -12,9 +12,13 @@ def health_check():
 
 @app.post("/api/population_age", response_model=PopulationResponse)
 def population_age(aoi: AOI):
-    # Temporary dummy data — will replace with raster logic
-    return PopulationResponse(
-        aoi_wkt=aoi.aoi_wkt,
-        totals={"lt15": 1000, "age15_64": 5000, "gt65": 1500, "all": 7500},
-        percentages={"lt15": 13.33, "age15_64": 66.67, "gt65": 20.0},
-    )
+    try:
+        stats = get_population_stats(aoi.aoi_wkt)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+    return {
+        "aoi_wkt": aoi.aoi_wkt,
+        "totals": stats["totals"],
+        "percentages": stats["percentages"],
+    }
