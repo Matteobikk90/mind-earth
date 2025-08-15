@@ -1,4 +1,5 @@
 import { inter, spaceMono } from "@/app/assets/fonts";
+import Header from "@/app/components/Header";
 import "@/app/globals.css";
 import type { Metadata } from "next";
 
@@ -14,7 +15,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${spaceMono.variable} antialiased`}>{children}</body>
+      <body className={`${inter.variable} ${spaceMono.variable} antialiased`}>
+        <Header />
+        <main>{children}</main>
+      </body>
     </html>
   );
 }
