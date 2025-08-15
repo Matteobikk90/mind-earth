@@ -5,3 +5,5 @@ COGS = {
     "age15_64": f"{S3_PREFIX}/pop_1564.tiff",
     "gt65": f"{S3_PREFIX}/pop_gt65.tiff",
 }
+
+DATABASE_URL = "postgresql+psycopg2://user:password@localhost:5432/mydb"

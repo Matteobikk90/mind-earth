@@ -32,8 +32,8 @@
       "pnpm eslint --fix"
     ],
     "*.py": [
-      "black",
-      "isort"
+      "backend/.venv/bin/black",
+      "backend/.venv/bin/isort"
     ]
   },
   "dependencies": {
