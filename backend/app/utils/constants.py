@@ -1,0 +1,7 @@
+S3_PREFIX = "s3://me-interview-task/be-data"
+
+COGS = {
+    "lt15": f"{S3_PREFIX}/pop_lt15.tiff",
+    "age15_64": f"{S3_PREFIX}/pop_1564.tiff",
+    "gt65": f"{S3_PREFIX}/pop_gt65.tiff",
+}

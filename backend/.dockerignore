@@ -16,8 +16,8 @@ venv/
 # OS files
 .DS_Store
 
-# Node modules (if any in backend)
+# Node modules 
 node_modules/
 
-# Tests (if not needed inside image)
+# Tests 
 tests/

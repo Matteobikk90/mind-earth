@@ -1,6 +1,11 @@
 fastapi
 uvicorn[standard]
 pydantic
+boto3
+rasterio
+shapely
+python-dotenv
+pyproj
 
 # Dev tools
 black
