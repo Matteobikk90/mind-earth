@@ -1,0 +1,23 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# Git
+.git
+.gitignore
+
+# OS files
+.DS_Store
+
+# Node modules (if any in backend)
+node_modules/
+
+# Tests (if not needed inside image)
+tests/
