@@ -1,12 +1,14 @@
 fastapi
 uvicorn[standard]
-pydantic
+pydantic[email]
 boto3
 rasterio
 shapely
 python-dotenv
 pyproj
 passlib[bcrypt]
+python-jose[cryptography]
+python-multipart
 
 # Dev tools
 black

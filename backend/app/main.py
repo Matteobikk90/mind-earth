@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
 
-from app.api import population, users
+from app.api import auth, population, users
 from app.config.db import close_db, init_db
 from fastapi import FastAPI
 
@@ -17,6 +17,7 @@ app = FastAPI(lifespan=lifespan)
 
 # Routers
 app.include_router(users.router)
+app.include_router(auth.router)
 app.include_router(population.router)
 
 

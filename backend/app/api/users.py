@@ -1,7 +1,7 @@
 from app.config.db import get_session
 from app.models.schemas_user import UserCreate, UserResponse
 from app.models.user import User
-from app.utils.security import hash_password
+from app.utils.security import get_current_user, hash_password
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 
@@ -30,3 +30,8 @@ def create_user(user: UserCreate, session: Session = Depends(get_session)):
 def list_users(session: Session = Depends(get_session)):
     users = session.exec(select(User)).all()
     return users
+
+
+@router.get("/me", response_model=UserResponse)
+def read_me(current_user: User = Depends(get_current_user)):
+    return current_user
