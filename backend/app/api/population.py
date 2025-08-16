@@ -1,21 +1,19 @@
-from app.utils.constants import COGS
-from app.utils.raster import sum_raster_over_geom
-from shapely import wkt
+from app.models.population import AOI, PopulationResponse
+from app.services.population import get_population_stats
+from fastapi import APIRouter, HTTPException
+
+router = APIRouter(prefix="/api", tags=["population"])
 
 
-def get_population_stats(aoi_wkt: str):
-    geom = wkt.loads(aoi_wkt)
+@router.post("/age", response_model=PopulationResponse)
+def population_age(aoi: AOI):
+    try:
+        stats = get_population_stats(aoi.aoi_wkt)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
-    totals = {key: sum_raster_over_geom(path, geom) for key, path in COGS.items()}
-    totals["all"] = sum(totals.values())
-
-    percentages = (
-        {key: 0 for key in ["lt15", "age15_64", "gt65"]}
-        if totals["all"] == 0
-        else {
-            key: round(100 * totals[key] / totals["all"], 2)
-            for key in ["lt15", "age15_64", "gt65"]
-        }
-    )
-
-    return {"totals": totals, "percentages": percentages}
+    return {
+        "aoi_wkt": aoi.aoi_wkt,
+        "totals": stats["totals"],
+        "percentages": stats["percentages"],
+    }

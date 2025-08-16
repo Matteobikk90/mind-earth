@@ -1,25 +1,33 @@
 "use client";
 
-import { useTheme } from "@/app/hooks/useTheme";
-import { nav } from "@/app/utils/constants";
-import Image from "next/image";
-import Link from "next/link";
+import { useTheme } from "@/hooks/useTheme";
+import { useStore } from "@/store";
+import { nav } from "@/utils/constants";
+import { default as Image } from "next/image";
+import { default as Link } from "next/link";
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
+import { useShallow } from "zustand/shallow";
 
 export default function Header() {
   const pathname = usePathname();
   const isDark = useTheme();
-  const logoSrc = isDark ? "/assets/images/logo-negative.png" : "/assets/images/logo-positive.png";
-
-  const items = useMemo(
-    () =>
-      nav.map((item) => {
-        const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
-        return { ...item, active };
-      }),
-    [pathname]
+  const { token, clearToken } = useStore(
+    useShallow(({ token, clearToken }) => ({
+      token,
+      clearToken,
+    }))
   );
+
+  const logoSrc = isDark ? "/assets/images/logo-positive.png" : "/assets/images/logo-negative.png";
+
+  const items = useMemo(() => {
+    if (!token) return [];
+    return nav.map((item) => {
+      const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+      return { ...item, active };
+    });
+  }, [pathname, token]);
 
   return (
     <header className="bg-[var(--color-background)]/80 supports-[backdrop-filter]:bg-[var(--color-background)]/60 container m-auto flex items-center justify-between border-b border-[color:var(--color-blue-20)] p-4 text-[var(--color-foreground)] backdrop-blur">
@@ -44,6 +52,22 @@ export default function Header() {
             {it.label}
           </Link>
         ))}
+
+        {token ? (
+          <button
+            className="ml-4 rounded-full bg-red-500 px-3 py-1 text-sm text-white hover:bg-red-600"
+            onClick={clearToken}
+          >
+            Logout
+          </button>
+        ) : (
+          <Link
+            href="/login"
+            className="bg-primary hover:bg-primary/90 ml-4 rounded-full px-3 py-1 text-sm text-white"
+          >
+            Login
+          </Link>
+        )}
       </nav>
     </header>
   );
