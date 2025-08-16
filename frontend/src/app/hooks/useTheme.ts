@@ -1,15 +1,9 @@
-import { useEffect, useState } from "react";
+"use client";
 
-export const useTheme = () => {
-  const [isDark, setIsDark] = useState(false);
+import { useStore } from "@/app/store";
 
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    const update = () => setIsDark(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
+export function useTheme() {
+  const mode = useStore(({ mode }) => mode);
 
-  return isDark;
-};
+  return mode === "dark";
+}

@@ -1,16 +1,25 @@
 "use client";
 
 import { useTheme } from "@/app/hooks/useTheme";
+import { useStore } from "@/app/store";
 import { nav } from "@/app/utils/constants";
-import Image from "next/image";
-import Link from "next/link";
+import { default as Image } from "next/image";
+import { default as Link } from "next/link";
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
+import { useShallow } from "zustand/shallow";
 
 export default function Header() {
   const pathname = usePathname();
   const isDark = useTheme();
-  const logoSrc = isDark ? "/assets/images/logo-negative.png" : "/assets/images/logo-positive.png";
+  const { token, clearToken } = useStore(
+    useShallow(({ token, clearToken }) => ({
+      token,
+      clearToken,
+    }))
+  );
+
+  const logoSrc = isDark ? "/assets/images/logo-positive.png" : "/assets/images/logo-negative.png";
 
   const items = useMemo(
     () =>
@@ -44,6 +53,22 @@ export default function Header() {
             {it.label}
           </Link>
         ))}
+
+        {token ? (
+          <button
+            className="ml-4 rounded-full bg-red-500 px-3 py-1 text-sm text-white hover:bg-red-600"
+            onClick={clearToken}
+          >
+            Logout
+          </button>
+        ) : (
+          <Link
+            href="/login"
+            className="bg-primary hover:bg-primary/90 ml-4 rounded-full px-3 py-1 text-sm text-white"
+          >
+            Login
+          </Link>
+        )}
       </nav>
     </header>
   );
