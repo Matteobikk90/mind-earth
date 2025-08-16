@@ -9,15 +9,12 @@ from fastapi import FastAPI, HTTPException
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
+    app.state.started = True
     yield
     close_db()
 
 
 app = FastAPI(lifespan=lifespan)
-
-
-def on_startup():
-    init_db()
 
 
 @app.get("/api/health")

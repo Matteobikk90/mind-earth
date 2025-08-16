@@ -1,9 +1,13 @@
-S3_PREFIX = "s3://me-interview-task/be-data"
+import os
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
+S3_PREFIX = "s3://me-interview-task/be-data"
 COGS = {
     "lt15": f"{S3_PREFIX}/pop_lt15.tiff",
     "age15_64": f"{S3_PREFIX}/pop_1564.tiff",
     "gt65": f"{S3_PREFIX}/pop_gt65.tiff",
 }
-
-DATABASE_URL = "postgresql+psycopg2://user:password@localhost:5432/mydb"
+DATABASE_URL = os.getenv("DATABASE_URL")
