@@ -21,14 +21,13 @@ export default function Header() {
 
   const logoSrc = isDark ? "/assets/images/logo-positive.png" : "/assets/images/logo-negative.png";
 
-  const items = useMemo(
-    () =>
-      nav.map((item) => {
-        const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
-        return { ...item, active };
-      }),
-    [pathname]
-  );
+  const items = useMemo(() => {
+    if (!token) return [];
+    return nav.map((item) => {
+      const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+      return { ...item, active };
+    });
+  }, [pathname, token]);
 
   return (
     <header className="bg-[var(--color-background)]/80 supports-[backdrop-filter]:bg-[var(--color-background)]/60 container m-auto flex items-center justify-between border-b border-[color:var(--color-blue-20)] p-4 text-[var(--color-foreground)] backdrop-blur">

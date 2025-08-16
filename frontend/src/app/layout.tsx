@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} ${spaceMono.variable} antialiased`}>
         <Header />
-        <main>{children}</main>
+        <main className="flex h-full flex-col items-center justify-center">{children}</main>
       </body>
     </html>
   );
