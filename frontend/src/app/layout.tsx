@@ -1,6 +1,6 @@
-import { inter, spaceMono } from "@/app/assets/fonts";
-import Header from "@/app/components/Header";
 import "@/app/globals.css";
+import { inter, spaceMono } from "@/assets/fonts";
+import Header from "@/components/Header";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

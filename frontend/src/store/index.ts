@@ -1,7 +1,7 @@
-import { createAuthSlice } from "@/app/store/slices/auth";
-import { createThemeSlice } from "@/app/store/slices/theme";
-import type { AuthSliceType } from "@/app/types/auth";
-import type { ThemeSliceType } from "@/app/types/theme";
+import { createAuthSlice } from "@/store/slices/auth";
+import { createThemeSlice } from "@/store/slices/theme";
+import type { AuthSliceType } from "@/types/auth";
+import type { ThemeSliceType } from "@/types/theme";
 import { create } from "zustand";
 import { persist, subscribeWithSelector } from "zustand/middleware";
 

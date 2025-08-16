@@ -1,4 +1,4 @@
-import type { AuthSliceType } from "@/app/types/auth";
+import type { AuthSliceType } from "@/types/auth";
 import type { StateCreator } from "zustand";
 
 export const createAuthSlice: StateCreator<AuthSliceType> = (set) => ({

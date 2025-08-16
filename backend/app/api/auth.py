@@ -3,8 +3,9 @@ from datetime import timedelta
 from app.config.db import get_session
 from app.models.user import User
 from app.utils.security import (ACCESS_TOKEN_EXPIRE_MINUTES,
-                                create_access_token, verify_password)
-from fastapi import APIRouter, Depends, HTTPException
+                                create_access_token, hash_password,
+                                verify_password)
+from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session, select
 
@@ -25,3 +26,23 @@ def login(
         data={"sub": user.email}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.post("/register")
+def register(email: str, password: str, db: Session = Depends(get_session)):
+    existing = db.exec(select(User).where(User.email == email)).first()
+    if existing:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered"
+        )
+
+    user = User(
+        email=email,
+        hashed_password=hash_password(password),
+        name=email.split("@")[0],
+    )
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+
+    return {"id": user.id, "email": user.email}

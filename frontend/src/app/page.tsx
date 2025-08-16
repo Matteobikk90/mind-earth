@@ -1,6 +1,6 @@
 "use client";
 
-import { useStore } from "@/app/store";
+import { useStore } from "@/store";
 
 export default function Home() {
   const token = useStore(({ token }) => token);

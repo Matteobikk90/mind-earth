@@ -1,8 +1,8 @@
 "use client";
 
-import { useTheme } from "@/app/hooks/useTheme";
-import { useStore } from "@/app/store";
-import { nav } from "@/app/utils/constants";
+import { useTheme } from "@/hooks/useTheme";
+import { useStore } from "@/store";
+import { nav } from "@/utils/constants";
 import { default as Image } from "next/image";
 import { default as Link } from "next/link";
 import { usePathname } from "next/navigation";
