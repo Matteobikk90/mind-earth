@@ -6,6 +6,7 @@ rasterio
 shapely
 python-dotenv
 pyproj
+passlib[bcrypt]
 
 # Dev tools
 black

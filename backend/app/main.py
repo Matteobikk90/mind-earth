@@ -1,9 +1,8 @@
 from contextlib import asynccontextmanager
 
-from app.api.population import get_population_stats
+from app.api import population, users
 from app.config.db import close_db, init_db
-from app.models.population import AOI, PopulationResponse
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 
 
 @asynccontextmanager
@@ -16,21 +15,11 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+# Routers
+app.include_router(users.router)
+app.include_router(population.router)
+
 
 @app.get("/api/health")
 def health_check():
     return {"status": "ok"}
-
-
-@app.post("/api/population_age", response_model=PopulationResponse)
-def population_age(aoi: AOI):
-    try:
-        stats = get_population_stats(aoi.aoi_wkt)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-    return {
-        "aoi_wkt": aoi.aoi_wkt,
-        "totals": stats["totals"],
-        "percentages": stats["percentages"],
-    }
