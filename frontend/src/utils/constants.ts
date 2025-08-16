@@ -3,3 +3,9 @@ export const nav = [
   { href: "/about", label: "About" },
 ];
 export const proxyTarget = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
+
+export const urls = {
+  auth: "/api/auth",
+  geoJson: "/api/geojson",
+  population: "/api/population",
+};
