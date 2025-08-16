@@ -1,19 +1,59 @@
 "use client";
 
-import { fetchGeoJSON } from "@/queries/geoJson";
+import localGeoJSON from "@/data/geojson.json";
+import type { PopulationResponseType } from "@/types/map";
+import {
+  controller,
+  getColor,
+  getPopulationDensity,
+  initialViewState,
+  speedAnimation,
+  tooltipHtmlTemplate,
+  type CustomViewState,
+} from "@/utils/map";
+import { FlyToInterpolator, WebMercatorViewport } from "@deck.gl/core";
 import { GeoJsonLayer } from "@deck.gl/layers";
 import DeckGL from "@deck.gl/react";
-import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
+import bbox from "@turf/bbox";
+import { useEffect, useMemo, useState } from "react";
 
 export default function PopulationMap() {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["geojson"],
-    queryFn: fetchGeoJSON,
-  });
+  // const { data, isLoading, error } = useQuery<PopulationResponseType>({
+  //   queryKey: ["geojson"],
+  //   queryFn: fetchGeoJSON,
+  // });
+  const data: PopulationResponseType = localGeoJSON as PopulationResponseType;
+  const [viewState, setViewState] = useState(initialViewState);
+
+  useEffect(() => {
+    if (!data) return;
+
+    const bounds = bbox(data);
+
+    const { longitude, latitude, zoom } = new WebMercatorViewport({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    }).fitBounds(
+      [
+        [bounds[0], bounds[1]],
+        [bounds[2], bounds[3]],
+      ],
+      { padding: 50 }
+    );
+
+    setViewState((prev) => ({
+      ...prev,
+      longitude,
+      latitude,
+      zoom,
+      transitionInterpolator: new FlyToInterpolator({ speed: speedAnimation }),
+      transitionDuration: "auto" as const,
+    }));
+  }, [data]);
 
   const layers = useMemo(() => {
     if (!data) return [];
+
     return [
       new GeoJsonLayer({
         id: "population-layer",
@@ -22,49 +62,42 @@ export default function PopulationMap() {
         stroked: true,
         filled: true,
         extruded: false,
-        // getFillColor: (f: any) => {
-        //   const density = f.properties.T_sum / f.properties.AREA;
-        //   return density > 1000 ? [200, 0, 0, 180] : [0, 200, 100, 180];
-        // },
+        getFillColor: (feature) => {
+          const density = getPopulationDensity(feature);
+          return getColor(density);
+        },
         getLineColor: [255, 255, 255],
-        lineWidthMinPixels: 1,
+        lineWidthMinPixels: 0.5,
       }),
     ];
   }, [data]);
 
-  if (isLoading) {
-    return (
-      <div className="flex h-[80vh] w-full items-center justify-center">
-        <span className="h-12 w-12 animate-spin rounded-full border-4 border-blue-400 border-t-transparent"></span>
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="flex h-[80vh] w-full items-center justify-center">
+  //       <span className="h-12 w-12 animate-spin rounded-full border-4 border-blue-400 border-t-transparent"></span>
+  //     </div>
+  //   );
+  // }
 
-  if (error) {
-    return <p className="text-red-500">Failed to load map data</p>;
-  }
+  // if (error) {
+  //   return <p className="text-red-500">Failed to load map data</p>;
+  // }
 
   return (
     <DeckGL
-      initialViewState={{
-        longitude: 10,
-        latitude: 50,
-        zoom: 3.5,
-        bearing: 0,
-        pitch: 0,
-      }}
-      controller={true}
+      viewState={viewState}
+      controller={controller}
       layers={layers}
+      onViewStateChange={({ viewState }) => {
+        setViewState(viewState as CustomViewState);
+      }}
       getTooltip={({ object }) =>
         object && {
-          html: `
-            <b>Population:</b> ${object.properties.T_sum}<br/>
-            <b>Male:</b> ${object.properties.M_sum}<br/>
-            <b>Female:</b> ${object.properties.F_sum}
-          `,
+          html: tooltipHtmlTemplate(object),
         }
       }
-      style={{ width: "100%", height: "80vh" }}
+      style={{ width: "100%", height: "100vh" }}
     />
   );
 }
