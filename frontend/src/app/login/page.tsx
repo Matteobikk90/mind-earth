@@ -7,7 +7,7 @@ import { useStore } from "@/store";
 import type { LoginResponseType } from "@/types/login";
 
 export default function LoginPage() {
-  const setToken = useStore((s) => s.setToken);
+  const setToken = useStore(({ setToken }) => setToken);
 
   const { form, status, handleChange, handleSubmit } = useAuth(async (email, password) => {
     const res = await api.post<LoginResponseType>(

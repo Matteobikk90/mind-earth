@@ -2,7 +2,7 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #000b27;
 }
 
 @theme inline {
@@ -10,54 +10,18 @@
   --color-foreground: var(--foreground);
   --font-inter: var(--font-inter);
   --font-space: var(--font-space-mono);
-
-  /* Blue Scale */
-  --color-blue-100: rgba(0, 11, 39, 1);
-  --color-blue-90: rgba(30, 32, 79, 1);
-  --color-blue-80: rgba(45, 47, 119, 1);
-  --color-blue-70: rgba(59, 63, 158, 1);
-  --color-blue-60: rgba(151, 154, 212, 1);
-  --color-blue-50: rgba(117, 120, 203, 1);
-  --color-blue-40: rgba(151, 154, 216, 1);
-  --color-blue-30: rgba(186, 187, 229, 1);
-  --color-blue-20: rgba(220, 221, 242, 1);
-  --color-blue-10: rgba(238, 238, 249, 1);
-
-  /* Green Scale */
-  --color-green-100: rgba(7, 16, 12, 1);
-  --color-green-90: rgba(16, 33, 25, 1);
-  --color-green-80: rgba(32, 67, 50, 1);
-  --color-green-70: rgba(47, 100, 76, 1);
-  --color-green-60: rgba(63, 134, 101, 1);
-  --color-green-50: rgba(79, 167, 126, 1);
-  --color-green-40: rgba(112, 187, 152, 1);
-  --color-green-30: rgba(147, 204, 178, 1);
-  --color-green-20: rgba(183, 221, 203, 1);
-  --color-green-10: rgba(219, 238, 229, 1);
-
-  /* Yellow/Orange Scale */
-  --color-yellow-100: rgba(7, 16, 12, 1);
-  --color-yellow-90: rgba(68, 39, 0, 1);
-  --color-yellow-80: rgba(131, 79, 0, 1);
-  --color-yellow-70: rgba(197, 118, 0, 1);
-  --color-yellow-60: rgba(255, 156, 7, 1);
-  --color-yellow-50: rgba(255, 182, 73, 1);
-  --color-yellow-40: rgba(255, 197, 109, 1);
-  --color-yellow-30: rgba(255, 211, 146, 1);
-  --color-yellow-20: rgba(255, 226, 182, 1);
-  --color-yellow-10: rgba(255, 240, 219, 1);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #000b27;
+    --foreground: #ffffff;
   }
 }
 
 html,
 body {
-  @apply h-full;
+  @apply flex h-full flex-col;
 }
 
 body {

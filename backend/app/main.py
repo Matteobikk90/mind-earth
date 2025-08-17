@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
 
-from app.api import auth, population, users
+from app.api import auth, geojson, population, users
 from app.config.db import close_db, init_db
 from app.utils.constants import ALLOW_ORIGINS
 from fastapi import FastAPI
@@ -29,6 +29,7 @@ app.add_middleware(
 # Routers
 app.include_router(users.router)
 app.include_router(auth.router)
+app.include_router(geojson.router)
 app.include_router(population.router)
 
 

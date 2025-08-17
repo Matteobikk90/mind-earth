@@ -20,3 +20,6 @@ ALLOW_ORIGINS = [
     "http://localhost:3000",
     "https://yourfrontend.com",
 ]
+
+BUCKET_NAME = "me-interview-task"
+GEOJSON_KEY = "fe-data/pop_nut3.geojson"

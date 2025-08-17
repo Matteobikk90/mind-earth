@@ -13,11 +13,6 @@ export default function Home() {
           ? "You are logged in! Explore the interactive map and population data."
           : "You’re not logged in yet. Please log in to explore the interactive map and population data."}
       </p>
-      {token && (
-        <article className="bg-foreground/5 max-w-lg rounded-md p-8 text-center shadow-lg">
-          map
-        </article>
-      )}
     </>
   );
 }
