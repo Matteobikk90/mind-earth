@@ -65,43 +65,51 @@ export function getPopulationDensity(feature: Feature<Geometry, PopulationType>)
   return 0;
 }
 
-export const tooltipHtmlTemplate = (feature: PopulationTooltipType) => {
-  const { T_sum, M_sum, F_sum } = feature.properties;
-
-  const formatNumber = (n: number) =>
-    new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(n);
-
-  const malePct = ((M_sum / T_sum) * 100).toFixed(1);
-  const femalePct = ((F_sum / T_sum) * 100).toFixed(1);
-  const areaKm2 = getFeatureAreaKm2(feature);
+export function tooltipHtmlTemplate(feature: PopulationTooltipType): string {
+  const {
+    NUTS_NAME,
+    CNTR_CODE,
+    COAST_TYPE,
+    LEVL_CODE,
+    NAME_LATN,
+    URBN_TYPE,
+    M_sum,
+    MOUNT_TYPE,
+    T_sum,
+    F_sum,
+    NUTS_ID,
+    pixel_count,
+  } = feature.properties;
 
   return `
-    <div class="px-2 pb-3 border-b border-white/10">
-      <h3 class="font-semibold text-heading-md">Population Data</h3>
+    <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; margin-bottom: 6px;">
+      <h3 style="margin: 0; font-size: 14px; font-weight: 600;">
+        ${NUTS_NAME} (${CNTR_CODE})
+      </h3>
+      <small style="opacity: 0.7;">${NAME_LATN} — ID: ${NUTS_ID}</small>
     </div>
 
-    <div class="flex justify-between gap-4 p-2 text-body-xs">
-      <span>Total Population</span>
-      <p class="text-neon-400 text-numbers-md">${formatNumber(T_sum)}</p>
+    <div style="font-size: 12px; line-height: 1.4;">
+      <div style="display: flex; justify-content: space-between;">
+        <span>Total Population:</span>
+        <span><b>${T_sum.toLocaleString()}</b></span>
+      </div>
+      <div style="display: flex; justify-content: space-between;">
+        <span>Male:</span>
+        <span>${M_sum.toLocaleString()}</span>
+      </div>
+      <div style="display: flex; justify-content: space-between;">
+        <span>Female:</span>
+        <span>${F_sum.toLocaleString()}</span>
+      </div>
+      <div style="display: flex; justify-content: space-between;">
+        <span>Pixel Count:</span>
+        <span>${pixel_count.toLocaleString()}</span>
+      </div>
     </div>
 
-    <div class="flex justify-between gap-4 p-2 border-y border-white/10 text-body-xs">
-      <span>Male</span>
-      <p class="text-neon-400 text-numbers-md">
-        ${formatNumber(M_sum)} (${malePct}%)
-      </p>
-    </div>
-
-    <div class="flex justify-between gap-4 p-2 text-body-xs">
-      <span>Female</span>
-      <p class="text-neon-400 text-numbers-md">
-        ${formatNumber(F_sum)} (${femalePct}%)
-      </p>
-    </div>
-
-    <div class="flex justify-between gap-4 p-2 text-body-xs">
-      <span>Area</span>
-      <p class="text-neon-400 text-numbers-md">${formatNumber(areaKm2)} km²</p>
+    <div style="margin-top: 6px; font-size: 11px; opacity: 0.7;">
+      Level: ${LEVL_CODE} | Urban: ${URBN_TYPE} | Coast: ${COAST_TYPE} | Mountain: ${MOUNT_TYPE}
     </div>
   `;
-};
+}

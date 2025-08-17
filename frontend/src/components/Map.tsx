@@ -11,13 +11,15 @@ import {
   tooltipHtmlTemplate,
   type CustomViewState,
 } from "@/utils/map";
+import { getTooltipPosition, tooltipContainerStyle } from "@/utils/tooltip";
 import { FlyToInterpolator, WebMercatorViewport } from "@deck.gl/core";
 import { GeoJsonLayer } from "@deck.gl/layers";
 import DeckGL from "@deck.gl/react";
 import bbox from "@turf/bbox";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 export default function PopulationMap() {
+  const mapContainerRef = useRef<HTMLElement | null>(null);
   // const { data, isLoading, error } = useQuery<PopulationResponseType>({
   //   queryKey: ["geojson"],
   //   queryFn: fetchGeoJSON,
@@ -85,19 +87,34 @@ export default function PopulationMap() {
   // }
 
   return (
-    <DeckGL
-      viewState={viewState}
-      controller={controller}
-      layers={layers}
-      onViewStateChange={({ viewState }) => {
-        setViewState(viewState as CustomViewState);
-      }}
-      getTooltip={({ object }) =>
-        object && {
-          html: tooltipHtmlTemplate(object),
-        }
-      }
-      style={{ width: "100%", height: "100vh" }}
-    />
+    <article ref={mapContainerRef}>
+      <DeckGL
+        viewState={viewState}
+        controller={controller}
+        layers={layers}
+        onViewStateChange={({ viewState }) => {
+          setViewState(viewState as CustomViewState);
+        }}
+        getTooltip={({ object, x, y }) => {
+          if (!object || !mapContainerRef.current) return null;
+
+          const tooltipWrapper = mapContainerRef.current.querySelector(".deck-tooltip");
+          const tooltipBounds = tooltipWrapper?.getBoundingClientRect();
+
+          if (!tooltipBounds) {
+            return null;
+          }
+
+          return {
+            html: tooltipHtmlTemplate(object),
+            style: {
+              ...(tooltipContainerStyle as CSSStyleDeclaration),
+              transform: getTooltipPosition(x, y, tooltipBounds),
+            },
+          };
+        }}
+        style={{ width: "100%", height: "100vh" }}
+      />
+    </article>
   );
 }
