@@ -3,10 +3,10 @@ from datetime import timedelta
 from app.config.db import get_session
 from app.models.user import User
 from app.utils.security import (ACCESS_TOKEN_EXPIRE_MINUTES,
-                                create_access_token, hash_password,
-                                verify_password)
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
+                                create_access_token, get_current_user,
+                                hash_password, verify_password)
+from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from sqlmodel import Session, select
 
@@ -29,7 +29,23 @@ def login(payload: AuthRequest, session: Session = Depends(get_session)):
     access_token = create_access_token(
         data={"sub": user.email}, expires_delta=access_token_expires
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+
+    response = JSONResponse({"message": "Login successful"})
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,
+        secure=False,
+        samesite="lax",
+        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+    )
+    return response
+
+
+@router.post("/logout")
+def logout(response: Response):
+    response.delete_cookie("access_token")
+    return {"message": "Logged out"}
 
 
 @router.post("/register")
@@ -49,3 +65,12 @@ def register(payload: AuthRequest, db: Session = Depends(get_session)):
     db.commit()
     db.refresh(user)
     return {"id": user.id, "email": user.email}
+
+
+@router.get("/me")
+def read_users_me(current_user: User = Depends(get_current_user)):
+    return {
+        "id": current_user.id,
+        "email": current_user.email,
+        "name": current_user.name,
+    }

@@ -1,37 +1,38 @@
 "use client";
 
+import api from "@/config/axios";
+import { queryClient } from "@/config/queryClient";
+import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
-import { useStore } from "@/store";
-import { nav } from "@/utils/constants";
+import { nav, urls } from "@/utils/constants";
 import { default as Image } from "next/image";
 import { default as Link } from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useMemo } from "react";
-import { useShallow } from "zustand/shallow";
 
 export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const isDark = useTheme();
-  const { token, clearToken } = useStore(
-    useShallow(({ token, clearToken }) => ({
-      token,
-      clearToken,
-    }))
-  );
+  const { isAuthenticated } = useAuth();
 
   const logoSrc = isDark ? "/assets/images/logo-positive.png" : "/assets/images/logo-negative.png";
 
   const items = useMemo(() => {
-    if (!token) return [];
+    if (!isAuthenticated) return [];
     return nav.map((item) => {
       const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
       return { ...item, active };
     });
-  }, [pathname, token]);
+  }, [pathname, isAuthenticated]);
 
-  const handleLogout = () => {
-    clearToken();
+  const handleLogout = async () => {
+    try {
+      await api.post(urls.logout);
+    } catch (err) {
+      console.error("Logout failed", err);
+    }
+    queryClient.setQueryData(["me"], null);
     router.push("/");
   };
 
@@ -57,7 +58,7 @@ export default function Header() {
               </Link>
             </li>
           ))}
-          {token ? (
+          {isAuthenticated ? (
             <li>
               <button
                 className="rounded-md bg-red-500 px-3 py-1 text-sm hover:bg-red-600"

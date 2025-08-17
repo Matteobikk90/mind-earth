@@ -2,20 +2,22 @@
 
 import { AuthForm } from "@/components/AuthForm";
 import api from "@/config/axios";
-import { useAuth } from "@/hooks/useAuth";
-import { useStore } from "@/store";
+import { useForm } from "@/hooks/useForm";
 import type { LoginResponseType } from "@/types/login";
 import { urls } from "@/utils/constants";
+import type { AxiosError } from "axios";
 
 export default function LoginPage() {
-  const setToken = useStore(({ setToken }) => setToken);
-
-  const { form, status, handleChange, handleSubmit } = useAuth(async (email, password) => {
-    const res = await api.post<LoginResponseType>(urls.login, {
-      email,
-      password,
-    });
-    setToken(res.data.access_token);
+  const { form, status, handleChange, handleSubmit } = useForm(async (email, password) => {
+    try {
+      await api.post<LoginResponseType>(urls.login, {
+        email,
+        password,
+      });
+    } catch (err) {
+      const axiosErr = err as AxiosError<{ detail?: string }>;
+      throw new Error(axiosErr.response?.data?.detail || axiosErr.message || "Login failed");
+    }
   }, "/");
 
   return (
