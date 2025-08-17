@@ -2,7 +2,7 @@ import type { PaletteKey } from "@/types/palette";
 
 export type MapSliceType = {
   palette: PaletteKey;
-  threshold: number;
-  setPalette: (palette: PaletteKey) => void;
-  setThreshold: (value: number) => void;
+  setPalette: (palette: MapSliceType["palette"]) => void;
+  threshold: number | null;
+  toggleThreshold: () => void;
 };

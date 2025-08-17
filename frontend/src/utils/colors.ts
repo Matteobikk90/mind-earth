@@ -1,3 +1,5 @@
+import type { PaletteKey } from "@/types/palette";
+
 export const sequentialPalettes = {
   blue: {
     10: "#EEEEF8",
@@ -36,3 +38,5 @@ export const sequentialPalettes = {
     100: "#ff8649",
   },
 };
+
+export const palettes: PaletteKey[] = ["blue", "green", "orange"];

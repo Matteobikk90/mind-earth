@@ -1,5 +1,6 @@
 "use client";
 
+import Controls from "@/components/Controls";
 import localGeoJSON from "@/data/geojson.json";
 import { useStore } from "@/store";
 import type { PopulationResponseType } from "@/types/map";
@@ -27,10 +28,10 @@ export default function PopulationMap() {
   //   queryKey: ["geojson"],
   //   queryFn: fetchGeoJSON,
   // })
-  const { palette, setPalette } = useStore(
-    useShallow(({ palette, setPalette }) => ({
+  const { palette, threshold } = useStore(
+    useShallow(({ palette, threshold }) => ({
       palette,
-      setPalette,
+      threshold,
     }))
   );
   const data: PopulationResponseType = localGeoJSON as PopulationResponseType;
@@ -67,18 +68,23 @@ export default function PopulationMap() {
 
     return [
       new GeoJsonLayer({
-        id: "population-layer",
+        id: `population-layer-${palette}-${threshold ?? "none"}`,
         data,
         pickable: true,
         getFillColor: (feature) => {
           const density = getPopulationDensity(feature);
+
+          if (threshold !== null && density < threshold) {
+            return [200, 200, 200, 80];
+          }
+
           return getColor(density, palette);
         },
         getLineColor: lineColors.black,
         lineWidthMinPixels: lineWidth,
       }),
     ];
-  }, [data, palette]);
+  }, [data, palette, threshold]);
 
   // if (isLoading) {
   //   return (
@@ -93,34 +99,37 @@ export default function PopulationMap() {
   // }
 
   return (
-    <article ref={mapContainerRef}>
-      <DeckGL
-        viewState={viewState}
-        controller={controller}
-        layers={layers}
-        onViewStateChange={({ viewState }) => {
-          setViewState(viewState as CustomViewState);
-        }}
-        getTooltip={({ object, x, y }) => {
-          if (!object || !mapContainerRef.current) return null;
+    <>
+      <article ref={mapContainerRef}>
+        <DeckGL
+          viewState={viewState}
+          controller={controller}
+          layers={layers}
+          onViewStateChange={({ viewState }) => {
+            setViewState(viewState as CustomViewState);
+          }}
+          getTooltip={({ object, x, y }) => {
+            if (!object || !mapContainerRef.current) return null;
 
-          const tooltipWrapper = mapContainerRef.current.querySelector(".deck-tooltip");
-          const tooltipBounds = tooltipWrapper?.getBoundingClientRect();
+            const tooltipWrapper = mapContainerRef.current.querySelector(".deck-tooltip");
+            const tooltipBounds = tooltipWrapper?.getBoundingClientRect();
 
-          if (!tooltipBounds) {
-            return null;
-          }
+            if (!tooltipBounds) {
+              return null;
+            }
 
-          return {
-            html: tooltipHtmlTemplate(object),
-            style: {
-              ...(tooltipContainerStyle as CSSStyleDeclaration),
-              transform: getTooltipPosition(x, y, tooltipBounds),
-            },
-          };
-        }}
-        style={{ width: "100%", height: "100vh" }}
-      />
-    </article>
+            return {
+              html: tooltipHtmlTemplate(object),
+              style: {
+                ...(tooltipContainerStyle as CSSStyleDeclaration),
+                transform: getTooltipPosition(x, y, tooltipBounds),
+              },
+            };
+          }}
+          style={{ width: "100%", height: "100vh" }}
+        />
+      </article>
+      <Controls />
+    </>
   );
 }

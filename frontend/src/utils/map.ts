@@ -1,4 +1,5 @@
 import type { PopulationType } from "@/types/map";
+import type { PaletteKey } from "@/types/palette";
 import { sequentialPalettes } from "@/utils/colors";
 import {
   FlyToInterpolator,
@@ -10,6 +11,7 @@ import area from "@turf/area";
 import type { Feature, Geometry, MultiPolygon, Polygon } from "geojson";
 
 export const speedAnimation = 2;
+export const densityThreshold = 30;
 export const lineColors: Record<"black" | "white", [number, number, number]> = {
   black: [0, 0, 0],
   white: [255, 255, 255],
@@ -45,19 +47,20 @@ export const initialViewState: CustomViewState = {
   transitionDuration: "auto" as const,
 };
 
-function hexToRgba(hex: string, alpha = 255): [number, number, number, number] {
-  const bigint = parseInt(hex.slice(1), 16);
-  return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255, alpha];
+export function getColor(density: number, palette: PaletteKey): Uint8Array {
+  const steps = Object.entries(sequentialPalettes[palette]).map(([k, hex]) => ({
+    stop: parseInt(k, 10),
+    color: hexToRgb(hex),
+  }));
+  const stop = steps.find(({ stop }) => density <= stop) ?? steps[steps.length - 1];
+
+  return new Uint8Array([...stop.color, 255]);
 }
 
-export function getColor(
-  density: number,
-  palette: keyof typeof sequentialPalettes = "blue"
-): Uint8Array {
-  const step = Math.min(100, Math.max(10, Math.ceil(((density / 5000) * 100) / 10) * 10));
-  const hex =
-    sequentialPalettes[palette][step as keyof (typeof sequentialPalettes)[typeof palette]];
-  return new Uint8Array(hexToRgba(hex));
+function hexToRgb(hex: string): [number, number, number] {
+  const clean = hex.replace("#", "");
+  const bigint = parseInt(clean, 16);
+  return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
 }
 
 export function getFeatureAreaKm2(

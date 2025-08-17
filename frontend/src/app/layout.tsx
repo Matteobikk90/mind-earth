@@ -15,7 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${inter.variable} ${spaceMono.variable} antialiased`}>
         <Providers>
           <Header />
-          <main className="flex flex-1 flex-col items-center justify-center">{children}</main>
+          <main className="container m-auto flex flex-1 flex-col p-4">{children}</main>
         </Providers>
       </body>
     </html>

@@ -18,9 +18,11 @@ export const useStore = create<StoreState>()(
     })),
     {
       name: "global-store",
-      partialize: ({ mode, token }) => ({
+      partialize: ({ mode, token, palette, threshold }) => ({
         mode,
         token,
+        palette,
+        threshold,
       }),
     }
   )
