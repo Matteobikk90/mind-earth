@@ -5,12 +5,13 @@ import { useStore } from "@/store";
 import { nav } from "@/utils/constants";
 import { default as Image } from "next/image";
 import { default as Link } from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useShallow } from "zustand/shallow";
 
 export default function Header() {
   const pathname = usePathname();
+  const router = useRouter();
   const isDark = useTheme();
   const { token, clearToken } = useStore(
     useShallow(({ token, clearToken }) => ({
@@ -28,6 +29,11 @@ export default function Header() {
       return { ...item, active };
     });
   }, [pathname, token]);
+
+  const handleLogout = () => {
+    clearToken();
+    router.push("/");
+  };
 
   return (
     <header className="bg-background text-foreground z-1 relative max-h-max flex-1 backdrop-blur supports-[backdrop-filter]:bg-[var(--color-background)]">
@@ -55,7 +61,7 @@ export default function Header() {
             <li>
               <button
                 className="rounded-md bg-red-500 px-3 py-1 text-sm hover:bg-red-600"
-                onClick={clearToken}
+                onClick={handleLogout}
               >
                 Logout
               </button>

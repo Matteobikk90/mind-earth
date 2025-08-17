@@ -1,12 +1,9 @@
 import { useStore } from "@/store";
-import { proxyTarget } from "@/utils/constants";
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: proxyTarget,
-  headers: {
-    "Content-Type": "application/json",
-  },
+  baseURL: process.env.NEXT_PUBLIC_API_URL + "/api",
+  headers: { "Content-Type": "application/json" },
 });
 
 api.interceptors.request.use((config) => {

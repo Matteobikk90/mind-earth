@@ -5,16 +5,16 @@ import api from "@/config/axios";
 import { useAuth } from "@/hooks/useAuth";
 import { useStore } from "@/store";
 import type { LoginResponseType } from "@/types/login";
+import { urls } from "@/utils/constants";
 
 export default function LoginPage() {
   const setToken = useStore(({ setToken }) => setToken);
 
   const { form, status, handleChange, handleSubmit } = useAuth(async (email, password) => {
-    const res = await api.post<LoginResponseType>(
-      "/auth/login",
-      new URLSearchParams({ username: email, password }),
-      { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
-    );
+    const res = await api.post<LoginResponseType>(urls.login, {
+      email,
+      password,
+    });
     setToken(res.data.access_token);
   }, "/");
 
