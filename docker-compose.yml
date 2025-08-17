@@ -1,8 +1,42 @@
 services:
   backend:
-    build: ./backend
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
     container_name: mindearth-backend
     ports:
       - "8000:8000"
+    volumes:
+      - ./backend:/app/backend
     env_file:
       - ./backend/.env
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
+    container_name: mindearth-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app/frontend
+    env_file:
+      - ./frontend/.env
+    depends_on:
+      - backend
+
+  db:
+    image: postgres:15
+    container_name: mindearth-db
+    restart: always
+    env_file:
+      - ./db/.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
