@@ -1,6 +1,5 @@
 "use client";
 
-import PopulationMap from "@/components/Map";
 import { useStore } from "@/store";
 
 export default function Home() {
@@ -14,7 +13,6 @@ export default function Home() {
           ? "You are logged in! Explore the interactive map and population data."
           : "You’re not logged in yet. Please log in to explore the interactive map and population data."}
       </p>
-      {token && <PopulationMap />}
     </>
   );
 }

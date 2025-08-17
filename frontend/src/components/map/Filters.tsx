@@ -6,7 +6,7 @@ import { palettes } from "@/utils/colors";
 import { densityThreshold } from "@/utils/map";
 import { useShallow } from "zustand/shallow";
 
-export default function Controls() {
+export default function Filters() {
   const { palette, setPalette, threshold, toggleThreshold } = useStore(
     useShallow(({ palette, setPalette, threshold, toggleThreshold }) => ({
       palette,

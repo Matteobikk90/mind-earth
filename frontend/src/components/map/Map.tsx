@@ -1,7 +1,9 @@
 "use client";
 
-import Controls from "@/components/Controls";
+import Filters from "@/components/map/Filters";
+import PopulationStats from "@/components/map/PopulationStats";
 import localGeoJSON from "@/data/geojson.json";
+import { getPopulationAge } from "@/queries/populationAge";
 import { useStore } from "@/store";
 import type { PopulationResponseType } from "@/types/map";
 import {
@@ -18,6 +20,7 @@ import { getTooltipPosition, tooltipContainerStyle, tooltipHtmlTemplate } from "
 import { FlyToInterpolator, WebMercatorViewport } from "@deck.gl/core";
 import { GeoJsonLayer } from "@deck.gl/layers";
 import DeckGL from "@deck.gl/react";
+import { useMutation } from "@tanstack/react-query";
 import bbox from "@turf/bbox";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useShallow } from "zustand/shallow";
@@ -28,6 +31,18 @@ export default function PopulationMap() {
   //   queryKey: ["geojson"],
   //   queryFn: fetchGeoJSON,
   // })
+  const {
+    mutate: fetchPopulationAge,
+    data: populationAgeData,
+    isPending: isLoadingPopulationAge,
+  } = useMutation({
+    mutationKey: ["populationAge"],
+    mutationFn: getPopulationAge,
+    onSuccess: (response) => {
+      console.log("Population Age Response:", response);
+    },
+  });
+
   const { palette, threshold } = useStore(
     useShallow(({ palette, threshold }) => ({
       palette,
@@ -71,6 +86,15 @@ export default function PopulationMap() {
         id: `population-layer-${palette}-${threshold ?? "none"}`,
         data,
         pickable: true,
+        onClick: ({ object }) => {
+          if (object) {
+            fetchPopulationAge({
+              feature: object,
+              name: object.properties.NUTS_NAME,
+              country: object.properties.CNTR_CODE,
+            });
+          }
+        },
         getFillColor: (feature) => {
           const density = getPopulationDensity(feature);
 
@@ -84,13 +108,11 @@ export default function PopulationMap() {
         lineWidthMinPixels: lineWidth,
       }),
     ];
-  }, [data, palette, threshold]);
+  }, [data, palette, threshold, fetchPopulationAge]);
 
   // if (isLoading) {
   //   return (
-  //     <div className="flex h-[80vh] w-full items-center justify-center">
-  //       <span className="h-12 w-12 animate-spin rounded-full border-4 border-blue-400 border-t-transparent"></span>
-  //     </div>
+  // <Loader />;
   //   );
   // }
 
@@ -129,7 +151,8 @@ export default function PopulationMap() {
           style={{ width: "100%", height: "100vh" }}
         />
       </article>
-      <Controls />
+      <Filters />
+      <PopulationStats populationStats={populationAgeData} isLoading={isLoadingPopulationAge} />
     </>
   );
 }
