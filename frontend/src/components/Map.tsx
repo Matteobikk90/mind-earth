@@ -1,29 +1,38 @@
 "use client";
 
 import localGeoJSON from "@/data/geojson.json";
+import { useStore } from "@/store";
 import type { PopulationResponseType } from "@/types/map";
 import {
   controller,
   getColor,
   getPopulationDensity,
   initialViewState,
+  lineColors,
+  lineWidth,
   speedAnimation,
-  tooltipHtmlTemplate,
   type CustomViewState,
 } from "@/utils/map";
-import { getTooltipPosition, tooltipContainerStyle } from "@/utils/tooltip";
+import { getTooltipPosition, tooltipContainerStyle, tooltipHtmlTemplate } from "@/utils/tooltip";
 import { FlyToInterpolator, WebMercatorViewport } from "@deck.gl/core";
 import { GeoJsonLayer } from "@deck.gl/layers";
 import DeckGL from "@deck.gl/react";
 import bbox from "@turf/bbox";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useShallow } from "zustand/shallow";
 
 export default function PopulationMap() {
   const mapContainerRef = useRef<HTMLElement | null>(null);
   // const { data, isLoading, error } = useQuery<PopulationResponseType>({
   //   queryKey: ["geojson"],
   //   queryFn: fetchGeoJSON,
-  // });
+  // })
+  const { palette, setPalette } = useStore(
+    useShallow(({ palette, setPalette }) => ({
+      palette,
+      setPalette,
+    }))
+  );
   const data: PopulationResponseType = localGeoJSON as PopulationResponseType;
   const [viewState, setViewState] = useState(initialViewState);
 
@@ -61,18 +70,15 @@ export default function PopulationMap() {
         id: "population-layer",
         data,
         pickable: true,
-        stroked: true,
-        filled: true,
-        extruded: false,
         getFillColor: (feature) => {
           const density = getPopulationDensity(feature);
-          return getColor(density);
+          return getColor(density, palette);
         },
-        getLineColor: [255, 255, 255],
-        lineWidthMinPixels: 0.5,
+        getLineColor: lineColors.black,
+        lineWidthMinPixels: lineWidth,
       }),
     ];
-  }, [data]);
+  }, [data, palette]);
 
   // if (isLoading) {
   //   return (

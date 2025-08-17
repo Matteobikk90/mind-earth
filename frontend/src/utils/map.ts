@@ -1,4 +1,5 @@
-import type { PopulationTooltipType, PopulationType } from "@/types/map";
+import type { PopulationType } from "@/types/map";
+import { sequentialPalettes } from "@/utils/colors";
 import {
   FlyToInterpolator,
   MapController,
@@ -8,21 +9,19 @@ import {
 import area from "@turf/area";
 import type { Feature, Geometry, MultiPolygon, Polygon } from "geojson";
 
-const densityStops = [
-  { max: 100, color: [186, 187, 229] },
-  { max: 500, color: [117, 120, 203] },
-  { max: 1000, color: [79, 167, 126] },
-  { max: 2000, color: [47, 100, 76] },
-  { max: 5000, color: [255, 182, 73] },
-  { max: Infinity, color: [197, 118, 0] },
-];
-
 export const speedAnimation = 2;
+export const lineColors: Record<"black" | "white", [number, number, number]> = {
+  black: [0, 0, 0],
+  white: [255, 255, 255],
+};
+export const lineWidth = 0.5;
 
 export type CustomViewState = MapViewState & {
   transitionInterpolator?: TransitionInterpolator;
   transitionDuration?: number | "auto";
 };
+
+export const lineStyle = { black: [0, 0, 0], white: [255, 255, 255], width: 0.5 };
 
 export const controller = {
   type: MapController,
@@ -46,9 +45,19 @@ export const initialViewState: CustomViewState = {
   transitionDuration: "auto" as const,
 };
 
-export function getColor(density: number): Uint8Array {
-  const stop = densityStops.find(({ max }) => density <= max);
-  return new Uint8Array([...(stop?.color ?? [217, 217, 217]), 255]);
+function hexToRgba(hex: string, alpha = 255): [number, number, number, number] {
+  const bigint = parseInt(hex.slice(1), 16);
+  return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255, alpha];
+}
+
+export function getColor(
+  density: number,
+  palette: keyof typeof sequentialPalettes = "blue"
+): Uint8Array {
+  const step = Math.min(100, Math.max(10, Math.ceil(((density / 5000) * 100) / 10) * 10));
+  const hex =
+    sequentialPalettes[palette][step as keyof (typeof sequentialPalettes)[typeof palette]];
+  return new Uint8Array(hexToRgba(hex));
 }
 
 export function getFeatureAreaKm2(
@@ -63,53 +72,4 @@ export function getPopulationDensity(feature: Feature<Geometry, PopulationType>)
     return km2 > 0 ? feature.properties.T_sum / km2 : 0;
   }
   return 0;
-}
-
-export function tooltipHtmlTemplate(feature: PopulationTooltipType): string {
-  const {
-    NUTS_NAME,
-    CNTR_CODE,
-    COAST_TYPE,
-    LEVL_CODE,
-    NAME_LATN,
-    URBN_TYPE,
-    M_sum,
-    MOUNT_TYPE,
-    T_sum,
-    F_sum,
-    NUTS_ID,
-    pixel_count,
-  } = feature.properties;
-
-  return `
-    <div style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; margin-bottom: 6px;">
-      <h3 style="margin: 0; font-size: 14px; font-weight: 600;">
-        ${NUTS_NAME} (${CNTR_CODE})
-      </h3>
-      <small style="opacity: 0.7;">${NAME_LATN} — ID: ${NUTS_ID}</small>
-    </div>
-
-    <div style="font-size: 12px; line-height: 1.4;">
-      <div style="display: flex; justify-content: space-between;">
-        <span>Total Population:</span>
-        <span><b>${T_sum.toLocaleString()}</b></span>
-      </div>
-      <div style="display: flex; justify-content: space-between;">
-        <span>Male:</span>
-        <span>${M_sum.toLocaleString()}</span>
-      </div>
-      <div style="display: flex; justify-content: space-between;">
-        <span>Female:</span>
-        <span>${F_sum.toLocaleString()}</span>
-      </div>
-      <div style="display: flex; justify-content: space-between;">
-        <span>Pixel Count:</span>
-        <span>${pixel_count.toLocaleString()}</span>
-      </div>
-    </div>
-
-    <div style="margin-top: 6px; font-size: 11px; opacity: 0.7;">
-      Level: ${LEVL_CODE} | Urban: ${URBN_TYPE} | Coast: ${COAST_TYPE} | Mountain: ${MOUNT_TYPE}
-    </div>
-  `;
 }
