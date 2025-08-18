@@ -137,18 +137,53 @@ Example user object:
 
 ---
 
+🧪 Testing
+
+### Frontend
+
+• Unit tests (Vitest + Testing Library):
+
+```
+cd frontend
+pnpm test:unit
+```
+
+pnpm test:unit
+
+• End-to-end tests (Playwright): -
+
+```
+cd frontend
+pnpm test:e2e
+```
+
+### Backend
+
+```
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+pytest
+```
+
+---
+
 🛠️ Development
 Run services with hot reload:
 
-```
+````
+
 docker compose up --build
+
 ```
 
 If you need to reset the DB:
 
 ```
+
 docker compose down -v
 docker compose up --build
+
 ```
 
 ---
@@ -156,6 +191,7 @@ docker compose up --build
 📦 Project Structure
 
 ```
+
 mind-earth/
 ├── backend/ # FastAPI app
 │ ├── app/
@@ -169,4 +205,8 @@ mind-earth/
 │ └── .env
 ├── docker-compose.yaml
 └── README.md
+
 ```
+
+```
+````
