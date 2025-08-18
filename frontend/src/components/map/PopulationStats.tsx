@@ -13,7 +13,7 @@ export default function PopulationStats({
   if (!populationStats && !isLoading) return null;
 
   return (
-    <aside aria-label="population-stats">
+    <aside aria-label="population-stats" className="min-h-[9.5rem]">
       {isLoading ? (
         <Loader />
       ) : (

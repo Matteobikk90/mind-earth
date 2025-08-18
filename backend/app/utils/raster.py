@@ -7,10 +7,25 @@ from shapely.geometry import mapping
 
 
 def reproject_geom_to_match(src_crs, geom):
-    """Reproject a Shapely geometry to match raster CRS."""
+    """Reproject a Shapely geometry (Polygon or MultiPolygon) to match raster CRS."""
     transformer = Transformer.from_crs("EPSG:4326", src_crs, always_xy=True)
-    new_coords = [transformer.transform(x, y) for x, y in geom.exterior.coords]
-    return type(geom)(new_coords)
+
+    def _reproject_polygon(polygon):
+        new_coords = [transformer.transform(x, y) for x, y in polygon.exterior.coords]
+        new_interiors = [
+            [transformer.transform(x, y) for x, y in ring.coords]
+            for ring in polygon.interiors
+        ]
+        return type(polygon)(new_coords, new_interiors)
+
+    if geom.geom_type == "Polygon":
+        return _reproject_polygon(geom)
+
+    elif geom.geom_type == "MultiPolygon":
+        return type(geom)([_reproject_polygon(p) for p in geom.geoms])
+
+    else:
+        raise ValueError(f"Unsupported geometry type: {geom.geom_type}")
 
 
 def sum_raster_over_geom(path, geom_geojson):
@@ -24,6 +39,7 @@ def sum_raster_over_geom(path, geom_geojson):
                 else geom_geojson
             )
             geom_projected = reproject_geom_to_match(src.crs, geom_shapely)
+
             out_image, _ = mask(src, [mapping(geom_projected)], crop=True)
 
             data = out_image[0]

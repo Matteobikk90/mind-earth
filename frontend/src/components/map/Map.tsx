@@ -1,8 +1,9 @@
 "use client";
 
+import Loader from "@/components/Loader";
 import Filters from "@/components/map/Filters";
 import PopulationStats from "@/components/map/PopulationStats";
-import localGeoJSON from "@/data/geojson.json";
+import { fetchGeoJSON } from "@/queries/geoJson";
 import { getPopulationAge } from "@/queries/populationAge";
 import { useStore } from "@/store";
 import type { PopulationResponseType } from "@/types/map";
@@ -20,7 +21,7 @@ import { getTooltipPosition, tooltipContainerStyle, tooltipHtmlTemplate } from "
 import { FlyToInterpolator, WebMercatorViewport } from "@deck.gl/core";
 import { GeoJsonLayer } from "@deck.gl/layers";
 import DeckGL from "@deck.gl/react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import area from "@turf/area";
 import bbox from "@turf/bbox";
 import { useTheme } from "next-themes";
@@ -31,10 +32,10 @@ export default function PopulationMap() {
   const mapContainerRef = useRef<HTMLElement | null>(null);
   const { theme } = useTheme();
   const isDark = theme === "dark";
-  // const { data, isLoading, error } = useQuery<PopulationResponseType>({
-  //   queryKey: ["geojson"],
-  //   queryFn: fetchGeoJSON,
-  // })
+  const { data, isLoading, error } = useQuery<PopulationResponseType>({
+    queryKey: ["geojson"],
+    queryFn: fetchGeoJSON,
+  });
   const {
     mutate: fetchPopulationAge,
     data: populationAgeData,
@@ -50,7 +51,6 @@ export default function PopulationMap() {
       threshold,
     }))
   );
-  const data: PopulationResponseType = localGeoJSON as PopulationResponseType;
   const [viewState, setViewState] = useState(initialViewState);
 
   useEffect(() => {
@@ -118,15 +118,13 @@ export default function PopulationMap() {
     ];
   }, [data, palette, threshold, isDark, fetchPopulationAge, theme]);
 
-  // if (isLoading) {
-  //   return (
-  // <Loader />;
-  //   );
-  // }
+  if (isLoading) {
+    return <Loader />;
+  }
 
-  // if (error) {
-  //   return <p className="text-red-500">Failed to load map data</p>;
-  // }
+  if (error) {
+    return <p className="text-red-500">Failed to load map data</p>;
+  }
 
   return (
     <>
