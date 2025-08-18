@@ -6,7 +6,7 @@ export default function Home() {
   const { isAuthenticated, user } = useAuth();
 
   return (
-    <section className="space-y-8">
+    <section className="font-space space-y-8">
       <h1 className="text-primary text-center font-sans text-4xl font-bold">MindEarth</h1>
 
       {isAuthenticated ? (

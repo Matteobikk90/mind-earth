@@ -11,7 +11,7 @@ export function AuthForm({
   handleSubmit,
 }: AuthFormType) {
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="font-space">
       <h1 className="text-center text-3xl font-bold">{title}</h1>
 
       <div>
