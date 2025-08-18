@@ -48,18 +48,19 @@ export const initialViewState: CustomViewState = {
 };
 
 export function getColor(density: number, palette: PaletteKey, isDark: boolean): Uint8Array {
-  let steps = Object.entries(sequentialPalettes[palette]).map(([k, hex]) => ({
+  const entries = Object.entries(sequentialPalettes[palette]);
+  const stops = entries.map(([k, hex]) => ({
     stop: parseInt(k, 10),
     color: hexToRgb(hex),
   }));
 
-  if (isDark) {
-    steps = steps.reverse();
-  }
+  const maxStop = stops[stops.length - 1].stop;
+  const ratio = Math.min(density / maxStop, 1);
 
-  const stop = steps.find(({ stop }) => density <= stop) ?? steps[steps.length - 1];
+  const index = Math.floor(ratio * (stops.length - 1));
+  const color = isDark ? stops[stops.length - 1 - index].color : stops[index].color;
 
-  return new Uint8Array([...stop.color, 255]);
+  return new Uint8Array([...color, 255]);
 }
 
 function hexToRgb(hex: string): [number, number, number] {

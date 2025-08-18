@@ -7,11 +7,16 @@ Mind Earth lets you explore geo-data, population stats, and manage authenticatio
 
 ### 🚀 Quick Start (with Docker)
 
+⚠️ First build note:
+The first `docker compose up --build` may take a few minutes because geospatial libraries
+(GDAL/Rasterio) need to be compiled/downloaded.
+Subsequent builds will be much faster thanks to Docker layer caching.
+
 ---
 
 ### 1. Clone the repository
 
-```bash
+```
 git clone https://github.com/Matteobikk90/mind-earth.git
 cd mind-earth
 
@@ -23,7 +28,7 @@ cd mind-earth
 
 Set env files as shown below (backend/.env, frontend/.env, db/.env).
 
-```bash
+```
 docker compose up --build
 ```
 
@@ -42,6 +47,13 @@ docker compose up --build
 ---
 
 ⚙️ Environment Variables
+
+```
+Create the following `.env` files in each service folder:
+- `frontend/.env`
+- `backend/.env`
+- `db/.env`
+```
 
 frontend/.env
 
@@ -107,12 +119,13 @@ Example user object:
 ---
 
 🗺️ Map Features
-• Interactive Deck.gl map with smooth transitions (FlyToInterpolator)
-• Dynamic zoom + bounds calculation based on GeoJSON data
-• Handles outliers (e.g., small islands) by filtering/clamping bounds
-• Color palettes selectable via sidebar
-• Density threshold filter via checkbox
-• Click on a region → fetches population age stats (total, <15, 15–64, 65+)
+
+- Interactive Deck.gl map with smooth transitions (FlyToInterpolator)
+- Dynamic zoom + bounds calculation based on GeoJSON data
+- Handles outliers (e.g., small islands) by filtering/clamping bounds
+- Color palettes selectable via sidebar
+- Density threshold filter via checkbox
+- Click on a region → fetches population age stats (total, <15, 15–64, 65+)
 
 ---
 
@@ -148,8 +161,6 @@ cd frontend
 pnpm test:unit
 ```
 
-pnpm test:unit
-
 • End-to-end tests (Playwright): -
 
 ```
@@ -171,8 +182,7 @@ pytest
 🛠️ Development
 Run services with hot reload:
 
-````
-
+```
 docker compose up --build
 
 ```
@@ -191,7 +201,6 @@ docker compose up --build
 📦 Project Structure
 
 ```
-
 mind-earth/
 ├── backend/ # FastAPI app
 │ ├── app/
@@ -205,8 +214,4 @@ mind-earth/
 │ └── .env
 ├── docker-compose.yaml
 └── README.md
-
 ```
-
-```
-````

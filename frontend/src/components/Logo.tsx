@@ -17,5 +17,5 @@ export default function Logo() {
   const isDark = theme === "dark";
   const logoSrc = isDark ? "/assets/images/logo-negative.png" : "/assets/images/logo-positive.png";
 
-  return <Image src={logoSrc} alt="Mind Earth Logo" width={150} height={150} priority />;
+  return <Image src={logoSrc} alt="Mind Earth Logo" width={150} height={76} priority />;
 }

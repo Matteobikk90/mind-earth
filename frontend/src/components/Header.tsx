@@ -36,7 +36,7 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-background text-foreground z-1 relative max-h-max flex-1 backdrop-blur supports-[backdrop-filter]:bg-[var(--color-background)]">
+    <header className="bg-background text-foreground z-1 relative max-h-[4.75rem] flex-1 backdrop-blur supports-[backdrop-filter]:bg-[var(--color-background)]">
       <nav className="border-foreground container m-auto flex items-center justify-between gap-2 border-b p-4">
         <Link href="/" className="flex items-center gap-2">
           <Logo />
