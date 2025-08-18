@@ -13,33 +13,37 @@ export function AuthForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-foreground/5 w-full max-w-md space-y-6 rounded-2xl p-8 shadow-lg"
+      className="bg-background text-foreground border-foreground/10 w-full max-w-md space-y-6 rounded-2xl border p-8 shadow-lg"
     >
       <h1 className="text-center text-3xl font-bold">{title}</h1>
 
-      <label className="mb-1 block text-sm font-medium">Email</label>
-      <input
-        name="email"
-        type="email"
-        value={form.email}
-        onChange={handleChange}
-        autoComplete="username"
-        className="w-full rounded-md border border-gray-300 p-2 text-black"
-        required
-      />
+      <div>
+        <label className="mb-1 block text-sm font-medium">Email</label>
+        <input
+          name="email"
+          type="email"
+          value={form.email}
+          onChange={handleChange}
+          autoComplete="username"
+          className="border-foreground/20 bg-background text-foreground placeholder:text-foreground/50 focus:border-primary focus:ring-primary w-full rounded-md border px-3 py-2 focus:ring-1"
+          required
+        />
+      </div>
 
-      <label className="mb-1 block text-sm font-medium">Password</label>
-      <input
-        name="password"
-        type="password"
-        value={form.password}
-        onChange={handleChange}
-        autoComplete="current-password"
-        className="w-full rounded-md border border-gray-300 p-2 text-black"
-        required
-      />
+      <div>
+        <label className="mb-1 block text-sm font-medium">Password</label>
+        <input
+          name="password"
+          type="password"
+          value={form.password}
+          onChange={handleChange}
+          autoComplete="current-password"
+          className="border-foreground/20 bg-background text-foreground placeholder:text-foreground/50 focus:border-primary focus:ring-primary w-full rounded-md border px-3 py-2 focus:ring-1"
+          required
+        />
+      </div>
 
-      {status.error && <p className="mb-2 text-sm text-red-500">{status.error}</p>}
+      {status.error && <p className="text-accent mb-2 text-sm">{status.error}</p>}
 
       <div className="flex items-center justify-between">
         {link && (
@@ -51,7 +55,7 @@ export function AuthForm({
         <button
           type="submit"
           disabled={status.loading}
-          className="bg-primary hover:bg-primary/90 rounded-md px-4 py-2 font-semibold text-white transition"
+          className="bg-primary text-background rounded-md px-4 py-2 font-semibold transition hover:opacity-90 disabled:opacity-50"
         >
           {status.loading ? "Loading..." : submitLabel}
         </button>
