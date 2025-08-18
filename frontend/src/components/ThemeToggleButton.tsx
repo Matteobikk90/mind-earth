@@ -2,11 +2,15 @@
 
 import { MoonIcon, SunIcon } from "@phosphor-icons/react";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 export default function ThemeToggleButton() {
   const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
-  if (!resolvedTheme) return null;
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) return null;
 
   const isDark = resolvedTheme === "dark";
 
