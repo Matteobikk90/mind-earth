@@ -7,7 +7,7 @@ export default function Home() {
 
   return (
     <section className="font-space space-y-8">
-      <h1 className="text-primary text-center font-sans text-4xl font-bold">MindEarth</h1>
+      <h1 className="text-secondary text-center font-sans text-4xl font-bold">MindEarth</h1>
 
       {isAuthenticated ? (
         <>

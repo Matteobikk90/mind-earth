@@ -154,26 +154,39 @@ Example user object:
 
 ### Frontend
 
-• Unit tests (Vitest + Testing Library):
+First, install dependencies in the frontend folder:
 
 ```
 cd frontend
+pnpm install
+```
+
+• Unit tests (Vitest + Testing Library):
+
+```
 pnpm test:unit
 ```
 
 • End-to-end tests (Playwright): -
 
 ```
-cd frontend
 pnpm test:e2e
 ```
 
 ### Backend
 
+First, create a virtual environment and install dependencies:
+
 ```
 cd backend
 python3 -m venv .venv
 source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+Then run tests:
+
+```
 pytest
 ```
 
@@ -184,16 +197,13 @@ Run services with hot reload:
 
 ```
 docker compose up --build
-
 ```
 
 If you need to reset the DB:
 
 ```
-
 docker compose down -v
 docker compose up --build
-
 ```
 
 ---

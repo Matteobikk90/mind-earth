@@ -8,7 +8,7 @@ export default function Loader() {
       aria-label="Loading"
     >
       <span
-        className="border-primary h-12 w-12 animate-spin rounded-full border-4 border-t-transparent"
+        className="border-accent h-12 w-12 animate-spin rounded-full border-4 border-t-transparent"
         aria-label="Loading"
       />
     </div>

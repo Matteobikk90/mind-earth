@@ -2,19 +2,13 @@
 
 import { useTheme } from "next-themes";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 
 export default function Logo() {
-  const { theme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const { resolvedTheme } = useTheme();
 
-  useEffect(() => setMounted(true), []);
+  if (!resolvedTheme) return null;
 
-  if (!mounted) {
-    return null;
-  }
-
-  const isDark = theme === "dark";
+  const isDark = resolvedTheme === "dark";
   const logoSrc = isDark ? "/assets/images/logo-negative.png" : "/assets/images/logo-positive.png";
 
   return <Image src={logoSrc} alt="Mind Earth Logo" width={150} height={76} priority />;
