@@ -17,3 +17,8 @@ psycopg2-binary
 black
 isort
 flake8
+
+# Tests
+pytest 
+pytest-asyncio 
+httpx
