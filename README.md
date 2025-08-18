@@ -106,11 +106,22 @@ Example user object:
 
 ---
 
+🗺️ Map Features
+• Interactive Deck.gl map with smooth transitions (FlyToInterpolator)
+• Dynamic zoom + bounds calculation based on GeoJSON data
+• Handles outliers (e.g., small islands) by filtering/clamping bounds
+• Color palettes selectable via sidebar
+• Density threshold filter via checkbox
+• Click on a region → fetches population age stats (total, <15, 15–64, 65+)
+
+---
+
 💡 Features
 
 - 🔑 JWT-based authentication (register/login/logout)
 - 🗂️ Geospatial data serving (GeoJSON)
 - 📊 Population statistics endpoint
+- 🗺️ Interactive Deck.gl map with filters & stats
 - 🌐 CORS-enabled API for frontend integration
 - 🐳 Fully Dockerized stack (frontend, backend, db)
 
