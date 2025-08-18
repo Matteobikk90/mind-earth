@@ -8,11 +8,8 @@ import { useShallow } from "zustand/shallow";
 
 export default function Filters() {
   const { palette, setPalette, threshold, toggleThreshold } = useStore(
-    useShallow(({ palette, setPalette, threshold, toggleThreshold }) => ({
-      palette,
-      setPalette,
-      threshold,
-      toggleThreshold,
+    useShallow((state) => ({
+      ...state,
     }))
   );
 
