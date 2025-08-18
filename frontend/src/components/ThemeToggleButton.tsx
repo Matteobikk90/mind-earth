@@ -1,3 +1,5 @@
+"use client";
+
 import { MoonIcon, SunIcon } from "@phosphor-icons/react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
@@ -16,7 +18,7 @@ export default function ThemeToggleButton() {
 
   return (
     <button
-      className="bg-background rounded-md border !p-1 shadow-md"
+      className="bg-background button rounded-md border !p-1 shadow-md"
       onClick={() => setTheme(isDark ? "light" : "dark")}
       aria-label="toggle-theme"
     >

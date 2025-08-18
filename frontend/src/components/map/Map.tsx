@@ -42,9 +42,6 @@ export default function PopulationMap() {
   } = useMutation({
     mutationKey: ["populationAge"],
     mutationFn: getPopulationAge,
-    onSuccess: (response) => {
-      console.log("Population Age Response:", response);
-    },
   });
 
   const { palette, threshold } = useStore(

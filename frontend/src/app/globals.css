@@ -35,10 +35,22 @@ body {
   @apply bg-background text-foreground font-inter relative flex h-full flex-col;
 }
 
+body {
+  background: linear-gradient(
+    180deg,
+    var(--background) 0%,
+    color-mix(in srgb, var(--background) 85%, var(--primary)) 100%
+  );
+}
+
 .button {
   @apply bg-primary text-background rounded-md px-3 py-1.5 text-sm font-medium transition-colors hover:opacity-90;
 }
 
 aside {
   @apply border-foreground/20 bg-background/80 text-foreground z-10 mt-4 w-56 space-y-4 rounded-lg border p-4 text-sm shadow-lg backdrop-blur-md;
+}
+
+form {
+  @apply bg-background/95 text-foreground border-foreground/10 m-auto w-full max-w-md space-y-6 rounded-2xl border p-8 shadow-xl backdrop-blur-sm;
 }

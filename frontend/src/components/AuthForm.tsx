@@ -11,10 +11,7 @@ export function AuthForm({
   handleSubmit,
 }: AuthFormType) {
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-background text-foreground border-foreground/10 w-full max-w-md space-y-6 rounded-2xl border p-8 shadow-lg"
-    >
+    <form onSubmit={handleSubmit}>
       <h1 className="text-center text-3xl font-bold">{title}</h1>
 
       <div>

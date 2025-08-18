@@ -9,6 +9,7 @@ import { nav, urls } from "@/utils/constants";
 import { default as Link } from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useMemo } from "react";
+import { toast } from "sonner";
 
 export default function Header() {
   const pathname = usePathname();
@@ -26,6 +27,7 @@ export default function Header() {
   const handleLogout = async () => {
     try {
       await api.post(urls.logout);
+      toast.success("✅ Logout successfully! Please login again to explore the map");
     } catch (err) {
       console.error("Logout failed", err);
     }

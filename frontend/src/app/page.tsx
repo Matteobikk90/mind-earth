@@ -28,7 +28,7 @@ export default function Home() {
           </div>
         </>
       ) : (
-        <p className="text-foreground/80 mt-4 text-base">
+        <p className="text-foreground/80 mt-4 text-center text-base">
           You’re not logged in yet. Please login to explore the interactive map and population data.
         </p>
       )}

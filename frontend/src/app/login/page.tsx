@@ -6,6 +6,7 @@ import { useForm } from "@/hooks/useForm";
 import type { LoginResponseType } from "@/types/login";
 import { urls } from "@/utils/constants";
 import type { AxiosError } from "axios";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const { form, status, handleChange, handleSubmit } = useForm(async (email, password) => {
@@ -14,9 +15,12 @@ export default function LoginPage() {
         email,
         password,
       });
+      toast.success("✅ Logged in successfully! Token will expire in 30 minutes.");
     } catch (err) {
       const axiosErr = err as AxiosError<{ detail?: string }>;
-      throw new Error(axiosErr.response?.data?.detail || axiosErr.message || "Login failed");
+      const message = axiosErr.response?.data?.detail || axiosErr.message || "Login failed";
+      toast.error(`❌ ${message}`);
+      throw new Error(message);
     }
   }, "/");
 
