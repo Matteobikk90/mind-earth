@@ -7,7 +7,7 @@ import { urls } from "@/utils/constants";
 import type { AxiosError } from "axios";
 import { toast } from "sonner";
 
-export default function RegisterPage() {
+export default function Register() {
   const { form, status, handleChange, handleSubmit } = useForm(async (email, password) => {
     try {
       await api.post(urls.register, { email, password });
