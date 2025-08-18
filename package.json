@@ -14,6 +14,10 @@
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.33.0",
     "@next/eslint-plugin-next": "^15.4.6",
+    "@playwright/test": "^1.54.2",
+    "@testing-library/jest-dom": "^6.7.0",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/geojson": "^7946.0.16",
     "eslint": "^9.33.0",
     "eslint-config-next": "^15.4.6",
@@ -27,7 +31,8 @@
     "lint-staged": "^16.1.5",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",
-    "typescript-eslint": "^8.39.1"
+    "typescript-eslint": "^8.39.1",
+    "vitest": "^3.2.4"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -49,9 +54,12 @@
     "@tanstack/react-query": "^5.85.3",
     "@turf/area": "^7.2.0",
     "@turf/bbox": "^7.2.0",
+    "@types/jest": "^30.0.0",
     "@types/wellknown": "^0.5.8",
+    "@vitejs/plugin-react": "^5.0.0",
     "axios": "^1.11.0",
     "deck.gl": "^9.1.14",
+    "jsdom": "^26.1.0",
     "maplibre-gl": "^5.6.2",
     "next-themes": "^0.4.6",
     "react-map-gl": "^8.0.4",

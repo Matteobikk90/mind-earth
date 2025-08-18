@@ -15,8 +15,11 @@ export function AuthForm({
       <h1 className="text-center text-3xl font-bold">{title}</h1>
 
       <div>
-        <label className="mb-1 block text-sm font-medium">Email</label>
+        <label htmlFor="email" className="mb-1 block text-sm font-medium">
+          Email
+        </label>
         <input
+          id="email"
           name="email"
           type="email"
           value={form.email}
@@ -28,8 +31,11 @@ export function AuthForm({
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium">Password</label>
+        <label htmlFor="password" className="mb-1 block text-sm font-medium">
+          Password
+        </label>
         <input
+          id="password"
           name="password"
           type="password"
           value={form.password}

@@ -8,7 +8,7 @@ import { urls } from "@/utils/constants";
 import type { AxiosError } from "axios";
 import { toast } from "sonner";
 
-export default function LoginPage() {
+export default function Login() {
   const { form, status, handleChange, handleSubmit } = useForm(async (email, password) => {
     try {
       await api.post<LoginResponseType>(urls.login, {
