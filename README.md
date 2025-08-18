@@ -175,7 +175,14 @@ pnpm test:e2e
 
 ### Backend
 
-First, create a virtual environment and install dependencies:
+⚠️ Postgres.app (or a local Postgres instance) must be running on your machine when running backend tests.
+You need backend/.env with:
+
+```
+DATABASE_URL=postgresql://postgres:password@localhost:5432/mindearth
+```
+
+Then create a virtual environment and install dependencies:
 
 ```
 cd backend
@@ -184,7 +191,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Then run tests:
+Run tests:
 
 ```
 pytest
