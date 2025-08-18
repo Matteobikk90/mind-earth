@@ -1,11 +1,11 @@
 "use client";
 
+import Logo from "@/components/Logo";
+import ThemeToggleButton from "@/components/ThemeToggleButton";
 import api from "@/config/axios";
 import { queryClient } from "@/config/queryClient";
 import { useAuth } from "@/hooks/useAuth";
-import { useTheme } from "@/hooks/useTheme";
 import { nav, urls } from "@/utils/constants";
-import { default as Image } from "next/image";
 import { default as Link } from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useMemo } from "react";
@@ -13,10 +13,7 @@ import { useMemo } from "react";
 export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
-  const isDark = useTheme();
   const { isAuthenticated } = useAuth();
-
-  const logoSrc = isDark ? "/assets/images/logo-positive.png" : "/assets/images/logo-negative.png";
 
   const items = useMemo(() => {
     if (!isAuthenticated) return [];
@@ -40,10 +37,11 @@ export default function Header() {
     <header className="bg-background text-foreground z-1 relative max-h-max flex-1 backdrop-blur supports-[backdrop-filter]:bg-[var(--color-background)]">
       <nav className="border-foreground container m-auto flex items-center justify-between gap-2 border-b p-4">
         <Link href="/" className="flex items-center gap-2">
-          <Image src={logoSrc} alt="Mind Earth Logo" width={150} height={150} priority />
+          <Logo />
           <span className="sr-only">Mind Earth</span>
         </Link>
         <ul className="flex items-center justify-between gap-2 md:gap-8">
+          <ThemeToggleButton />
           {items.map((it) => (
             <li key={it.href}>
               <Link
