@@ -45,6 +45,9 @@
     ]
   },
   "dependencies": {
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "next": "15.4.6",
     "@deck.gl/core": "^9.1.14",
     "@deck.gl/layers": "^9.1.14",
     "@deck.gl/react": "^9.1.14",
@@ -54,9 +57,7 @@
     "@tanstack/react-query": "^5.85.3",
     "@turf/area": "^7.2.0",
     "@turf/bbox": "^7.2.0",
-    "@types/jest": "^30.0.0",
     "@types/wellknown": "^0.5.8",
-    "@vitejs/plugin-react": "^5.0.0",
     "axios": "^1.11.0",
     "deck.gl": "^9.1.14",
     "jsdom": "^26.1.0",
