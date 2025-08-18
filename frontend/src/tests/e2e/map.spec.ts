@@ -10,6 +10,35 @@ test("Population Map › loads map and applies filters", async ({ page }) => {
     })
   );
 
+  // Mock geojson data
+  await page.route("**/api/geojson", (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            properties: { NUTS_NAME: "Testland", CNTR_CODE: "TST" },
+            geometry: {
+              type: "Polygon",
+              coordinates: [
+                [
+                  [10, 40],
+                  [20, 40],
+                  [20, 50],
+                  [10, 50],
+                  [10, 40],
+                ],
+              ],
+            },
+          },
+        ],
+      }),
+    })
+  );
+
   await page.goto("/map");
 
   // Filters aside
