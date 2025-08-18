@@ -49,7 +49,9 @@ export default function Header() {
                 aria-current={it.active ? "page" : undefined}
                 className={[
                   "rounded-md px-3 py-1.5 text-sm transition-colors",
-                  it.active ? "text-foreground" : "",
+                  it.active
+                    ? "text-primary font-semibold"
+                    : "text-foreground/70 hover:text-primary hover:font-semibold",
                 ].join(" ")}
               >
                 {it.label}
@@ -58,16 +60,13 @@ export default function Header() {
           ))}
           {isAuthenticated ? (
             <li>
-              <button
-                className="rounded-md bg-red-500 px-3 py-1 text-sm hover:bg-red-600"
-                onClick={handleLogout}
-              >
+              <button className="button" onClick={handleLogout}>
                 Logout
               </button>
             </li>
           ) : (
             <li>
-              <Link href="/login" className="bg-primary rounded-md px-3 py-1 text-sm">
+              <Link className="button" href="/login">
                 Login
               </Link>
             </li>

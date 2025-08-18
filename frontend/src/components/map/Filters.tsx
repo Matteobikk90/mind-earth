@@ -14,10 +14,10 @@ export default function Filters() {
   );
 
   return (
-    <aside className="z-10 mt-4 w-56 space-y-4 rounded-lg border border-white/15 bg-[rgba(19,23,61,0.7)] p-4 text-sm text-white backdrop-blur-md">
+    <aside>
       <h2 className="mb-2 font-semibold">Color Palette</h2>
       <select
-        className="w-full rounded-md border border-white/20 bg-[#13173d]/50 px-2 py-1 focus:outline-none"
+        className="border-foreground/20 bg-background/70 text-foreground focus:ring-primary w-full rounded-md border px-2 py-1 focus:outline-none focus:ring-1"
         value={palette}
         onChange={(e) => setPalette(e.target.value as PaletteKey)}
       >
@@ -34,7 +34,7 @@ export default function Filters() {
           type="checkbox"
           checked={threshold !== null}
           onChange={toggleThreshold}
-          className="h-4 w-4 rounded border-gray-400"
+          className="border-foreground/30 accent-primary h-4 w-4 rounded"
         />
         <label htmlFor="density-filter">Exclude density &lt; {densityThreshold}</label>
       </div>

@@ -13,13 +13,13 @@ export default function PopulationStats({
   if (!populationStats && !isLoading) return null;
 
   return (
-    <aside className="z-10 mt-4 w-56 space-y-4 rounded-lg border border-white/15 bg-[rgba(19,23,61,0.7)] p-4 text-sm text-white backdrop-blur-md">
+    <aside>
       {isLoading ? (
         <Loader />
       ) : (
         populationStats && (
           <>
-            <h3 className="border-b border-white/20 pb-1 text-sm font-semibold">
+            <h3 className="border-foreground/20 border-b pb-1 text-sm font-semibold">
               {populationStats.name}, {populationStats.country}
             </h3>
             <ul className="space-y-1 text-xs">

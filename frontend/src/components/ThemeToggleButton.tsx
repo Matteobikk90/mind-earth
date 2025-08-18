@@ -16,7 +16,7 @@ export default function ThemeToggleButton() {
 
   return (
     <button
-      className="bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 hover:shadow-hover-elevation rounded-md border p-1"
+      className="bg-background rounded-md border !p-1 shadow-md"
       onClick={() => setTheme(isDark ? "light" : "dark")}
       aria-label="toggle-theme"
     >

@@ -21,12 +21,16 @@ import { FlyToInterpolator, WebMercatorViewport } from "@deck.gl/core";
 import { GeoJsonLayer } from "@deck.gl/layers";
 import DeckGL from "@deck.gl/react";
 import { useMutation } from "@tanstack/react-query";
+import area from "@turf/area";
 import bbox from "@turf/bbox";
+import { useTheme } from "next-themes";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useShallow } from "zustand/shallow";
 
 export default function PopulationMap() {
   const mapContainerRef = useRef<HTMLElement | null>(null);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   // const { data, isLoading, error } = useQuery<PopulationResponseType>({
   //   queryKey: ["geojson"],
   //   queryFn: fetchGeoJSON,
@@ -55,18 +59,25 @@ export default function PopulationMap() {
   useEffect(() => {
     if (!data) return;
 
-    const bounds = bbox(data);
+    // Filter out small polygons (tiny islands) - so mainland is centered
+    const mainlandFeatures = {
+      ...data,
+      features: data.features.filter((f) => area(f) > 5e8),
+    };
+
+    const filtered = mainlandFeatures.features.length > 0 ? mainlandFeatures : data;
+
+    const bounds = bbox(filtered);
+
+    const clampedBounds: [[number, number], [number, number]] = [
+      [Math.max(bounds[0], -15), Math.max(bounds[1], 30)],
+      [Math.min(bounds[2], 40), Math.min(bounds[3], 70)],
+    ];
 
     const { longitude, latitude, zoom } = new WebMercatorViewport({
       width: window.innerWidth,
       height: window.innerHeight,
-    }).fitBounds(
-      [
-        [bounds[0], bounds[1]],
-        [bounds[2], bounds[3]],
-      ],
-      { padding: 50 }
-    );
+    }).fitBounds(clampedBounds, { padding: 50 });
 
     setViewState((prev) => ({
       ...prev,
@@ -83,7 +94,7 @@ export default function PopulationMap() {
 
     return [
       new GeoJsonLayer({
-        id: `population-layer-${palette}-${threshold ?? "none"}`,
+        id: `population-layer-${theme}-${palette}-${threshold ?? "none"}`,
         data,
         pickable: true,
         onClick: ({ object }) => {
@@ -102,13 +113,13 @@ export default function PopulationMap() {
             return [200, 200, 200, 80];
           }
 
-          return getColor(density, palette);
+          return getColor(density, palette, isDark);
         },
         getLineColor: lineColors.black,
         lineWidthMinPixels: lineWidth,
       }),
     ];
-  }, [data, palette, threshold, fetchPopulationAge]);
+  }, [data, palette, threshold, isDark, fetchPopulationAge, theme]);
 
   // if (isLoading) {
   //   return (
