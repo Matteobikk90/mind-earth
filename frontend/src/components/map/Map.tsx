@@ -130,7 +130,7 @@ export default function PopulationMap() {
 
   return (
     <>
-      <article ref={mapContainerRef}>
+      <article ref={mapContainerRef} aria-label="map">
         <DeckGL
           viewState={viewState}
           controller={controller}

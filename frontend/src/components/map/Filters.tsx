@@ -14,9 +14,13 @@ export default function Filters() {
   );
 
   return (
-    <aside>
-      <h2 className="mb-2 font-semibold">Color Palette</h2>
+    <aside aria-label="filters">
+      <h2 className="mb-2 font-semibold">Filters</h2>
+      <label htmlFor="palette-select" className="mb-2 block font-semibold">
+        Color Palette
+      </label>
       <select
+        id="palette-select"
         className="border-foreground/20 bg-background/70 text-foreground focus:ring-primary w-full rounded-md border px-2 py-1 focus:outline-none focus:ring-1"
         value={palette}
         onChange={(e) => setPalette(e.target.value as PaletteKey)}
