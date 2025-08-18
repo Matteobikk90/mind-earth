@@ -2,6 +2,7 @@
 
 import { AuthForm } from "@/components/AuthForm";
 import api from "@/config/axios";
+import { queryClient } from "@/config/queryClient";
 import { useForm } from "@/hooks/useForm";
 import type { LoginResponseType } from "@/types/login";
 import { urls } from "@/utils/constants";
@@ -15,6 +16,7 @@ export default function Login() {
         email,
         password,
       });
+      await queryClient.invalidateQueries({ queryKey: ["me"] });
       toast.success("✅ Logged in successfully! Token will expire in 30 minutes.");
     } catch (err) {
       const axiosErr = err as AxiosError<{ detail?: string }>;
