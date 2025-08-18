@@ -22,11 +22,14 @@ import { GeoJsonLayer } from "@deck.gl/layers";
 import DeckGL from "@deck.gl/react";
 import { useMutation } from "@tanstack/react-query";
 import bbox from "@turf/bbox";
+import { useTheme } from "next-themes";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useShallow } from "zustand/shallow";
 
 export default function PopulationMap() {
   const mapContainerRef = useRef<HTMLElement | null>(null);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   // const { data, isLoading, error } = useQuery<PopulationResponseType>({
   //   queryKey: ["geojson"],
   //   queryFn: fetchGeoJSON,
@@ -83,7 +86,7 @@ export default function PopulationMap() {
 
     return [
       new GeoJsonLayer({
-        id: `population-layer-${palette}-${threshold ?? "none"}`,
+        id: `population-layer-${theme}-${palette}-${threshold ?? "none"}`,
         data,
         pickable: true,
         onClick: ({ object }) => {
@@ -102,13 +105,13 @@ export default function PopulationMap() {
             return [200, 200, 200, 80];
           }
 
-          return getColor(density, palette);
+          return getColor(density, palette, isDark);
         },
         getLineColor: lineColors.black,
         lineWidthMinPixels: lineWidth,
       }),
     ];
-  }, [data, palette, threshold, fetchPopulationAge]);
+  }, [data, palette, threshold, isDark, fetchPopulationAge, theme]);
 
   // if (isLoading) {
   //   return (

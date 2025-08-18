@@ -47,11 +47,16 @@ export const initialViewState: CustomViewState = {
   transitionDuration: "auto" as const,
 };
 
-export function getColor(density: number, palette: PaletteKey): Uint8Array {
-  const steps = Object.entries(sequentialPalettes[palette]).map(([k, hex]) => ({
+export function getColor(density: number, palette: PaletteKey, isDark: boolean): Uint8Array {
+  let steps = Object.entries(sequentialPalettes[palette]).map(([k, hex]) => ({
     stop: parseInt(k, 10),
     color: hexToRgb(hex),
   }));
+
+  if (isDark) {
+    steps = steps.reverse();
+  }
+
   const stop = steps.find(({ stop }) => density <= stop) ?? steps[steps.length - 1];
 
   return new Uint8Array([...stop.color, 255]);
