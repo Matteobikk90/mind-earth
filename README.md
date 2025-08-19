@@ -19,7 +19,6 @@ Subsequent builds will be much faster thanks to Docker layer caching.
 ```
 git clone https://github.com/Matteobikk90/mind-earth.git
 cd mind-earth
-
 ```
 
 ---
@@ -47,12 +46,12 @@ docker compose up --build
 ---
 
 ⚙️ Environment Variables
+Create the following `.env` files in each service folder:
 
 ```
-Create the following `.env` files in each service folder:
-- `frontend/.env`
-- `backend/.env`
-- `db/.env`
+- frontend/.env
+- backend/.env
+- db/.env
 ```
 
 frontend/.env
@@ -81,6 +80,47 @@ db/.env
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=password
 POSTGRES_DB=mindearth
+```
+
+---
+
+💻 Local Development (without Docker)
+
+If you prefer to run services locally:
+
+### Frontend
+
+```
+cd frontend
+pnpm install
+pnpm dev
+```
+
+Runs on → http://localhost:3000
+
+### Backend
+
+```
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+Runs on → http://localhost:8000
+⚠️ Requires a local PostgreSQL instance.
+
+Create a database named `mindearth`:
+
+```
+createdb mindearth
+```
+
+Update backend/.env with:
+
+```
+DATABASE_URL=postgresql://postgres:password@localhost:5432/mindearth
 ```
 
 ---
@@ -145,7 +185,7 @@ Example user object:
 - Frontend: Next.js 15 (App Router, Zustand, Axios, TailwindCSS)
 - Backend: FastAPI (SQLModel, Pydantic)
 - Database: PostgreSQL (Docker volume persisted)
-- Auth: JWT + bcrypter
+- Auth: JWT + bcrypt
 - DevOps: Docker, Docker Compose
 
 ---
@@ -167,7 +207,15 @@ pnpm install
 pnpm test:unit
 ```
 
-• End-to-end tests (Playwright): -
+• End-to-end tests (Playwright):
+
+Before running e2e tests for the first time, you need to install the Playwright browsers:
+
+```
+pnpm exec playwright install
+```
+
+Then you can run the tests:
 
 ```
 pnpm test:e2e
@@ -175,8 +223,15 @@ pnpm test:e2e
 
 ### Backend
 
-⚠️ Postgres.app (or a local Postgres instance) must be running on your machine when running backend tests.
-You need backend/.env with:
+⚠️ Requires a local PostgreSQL instance.
+
+Create a database named `mindearth`:
+
+```
+createdb mindearth
+```
+
+Update backend/.env with:
 
 ```
 DATABASE_URL=postgresql://postgres:password@localhost:5432/mindearth
@@ -232,3 +287,19 @@ mind-earth/
 ├── docker-compose.yaml
 └── README.md
 ```
+
+---
+
+🎁 Extra Feature
+
+For the assignment requirements, please review the `main` branch.
+
+If you’d like to see an experimental **3D extruded map**,
+checkout the branch:
+
+```
+git checkout feature/extruded-3d
+```
+
+⚠️ Note: this feature is responsive and functional, but not fully styled.  
+It’s included as a bonus to demonstrate experimentation with 3D visualization.

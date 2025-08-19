@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("Population Map › loads map and applies filters", async ({ page }) => {
+test("Population Map › loads map and applies filters", async ({ page, context }) => {
   // Mock auth
   await page.route("**/api/auth/me", (route) =>
     route.fulfill({
@@ -10,7 +10,7 @@ test("Population Map › loads map and applies filters", async ({ page }) => {
     })
   );
 
-  // Mock geojson data
+  // Mock geojson
   await page.route("**/api/geojson", (route) =>
     route.fulfill({
       status: 200,
@@ -38,6 +38,15 @@ test("Population Map › loads map and applies filters", async ({ page }) => {
       }),
     })
   );
+
+  // Add cookie so middleware allows /map
+  await context.addCookies([
+    {
+      name: "access_token",
+      value: "fake-token",
+      url: "http://localhost:3000",
+    },
+  ]);
 
   await page.goto("/map");
 

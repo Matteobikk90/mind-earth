@@ -171,7 +171,10 @@ export default function PopulationMap() {
         />
       </article>
       <Filters />
-      <PopulationStats populationStats={populationAgeData} isLoading={isLoadingPopulationAge} />
+      <PopulationStats
+        populationStats={populationAgeData ?? null}
+        isLoading={isLoadingPopulationAge}
+      />
     </>
   );
 }
