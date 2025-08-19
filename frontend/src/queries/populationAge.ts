@@ -1,18 +1,27 @@
-import api from "@/config/axios";
-import type { PopulationAgeParamsType } from "@/types/population";
+import type { PopulationAgeParamsType, PopulationStatsType } from "@/types/population";
+import { axiosPost } from "@/utils/api";
 import { urls } from "@/utils/constants";
 import wellknown from "wellknown";
 
 export async function getPopulationAge({ feature, name, country }: PopulationAgeParamsType) {
   const aoi_wkt = wellknown.stringify(feature);
 
-  const res = await api.post(urls.populationStats, { aoi_wkt });
+  try {
+    const stats = await axiosPost<PopulationStatsType, { aoi_wkt: string }>(
+      urls.populationStats,
+      {
+        aoi_wkt,
+      },
+      "population_age"
+    );
 
-  const stats = res.data;
+    if (!stats) {
+      return undefined;
+    }
 
-  return {
-    ...stats,
-    name,
-    country,
-  };
+    return { ...stats, name, country };
+  } catch (error) {
+    console.error("Failed to get population stats:", error);
+    throw error;
+  }
 }

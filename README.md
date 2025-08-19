@@ -207,7 +207,15 @@ pnpm install
 pnpm test:unit
 ```
 
-• End-to-end tests (Playwright): -
+• End-to-end tests (Playwright):
+
+Before running e2e tests for the first time, you need to install the Playwright browsers:
+
+```
+pnpm exec playwright install
+```
+
+Then you can run the tests:
 
 ```
 pnpm test:e2e
