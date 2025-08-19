@@ -5,4 +5,6 @@ export type MapSliceType = {
   setPalette: (palette: MapSliceType["palette"]) => void;
   threshold: number | null;
   toggleThreshold: () => void;
+  extruded: boolean;
+  toggleExtruded: () => void;
 };

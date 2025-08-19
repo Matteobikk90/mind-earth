@@ -10,4 +10,6 @@ export const createMapSlice: StateCreator<MapSliceType> = (set) => ({
     set((state) => ({
       threshold: state.threshold === null ? densityThreshold : null,
     })),
+  extruded: false,
+  toggleExtruded: () => set((state) => ({ extruded: !state.extruded })),
 });

@@ -45,10 +45,11 @@ export default function PopulationMap() {
     mutationFn: getPopulationAge,
   });
 
-  const { palette, threshold } = useStore(
-    useShallow(({ palette, threshold }) => ({
+  const { palette, threshold, extruded } = useStore(
+    useShallow(({ palette, threshold, extruded }) => ({
       palette,
       threshold,
+      extruded,
     }))
   );
   const [viewState, setViewState] = useState(initialViewState);
@@ -86,12 +87,21 @@ export default function PopulationMap() {
     }));
   }, [data]);
 
+  useEffect(() => {
+    setViewState((prev) => ({
+      ...prev,
+      pitch: extruded ? 45 : 0,
+      transitionInterpolator: new FlyToInterpolator({ speed: speedAnimation }),
+      transitionDuration: "auto" as const,
+    }));
+  }, [extruded]);
+
   const layers = useMemo(() => {
     if (!data) return [];
 
     return [
       new GeoJsonLayer({
-        id: `population-layer-${theme}-${palette}-${threshold ?? "none"}`,
+        id: `population-layer-${theme}-${palette}-${extruded}-${threshold ?? "none"}`,
         data,
         pickable: true,
         onClick: ({ object }) => {
@@ -103,6 +113,9 @@ export default function PopulationMap() {
             });
           }
         },
+        extruded,
+        getElevation: (feature) => (extruded ? getPopulationDensity(feature) * 50 : 0),
+
         getFillColor: (feature) => {
           const density = getPopulationDensity(feature);
 
@@ -116,7 +129,7 @@ export default function PopulationMap() {
         lineWidthMinPixels: lineWidth,
       }),
     ];
-  }, [data, palette, threshold, isDark, fetchPopulationAge, theme]);
+  }, [data, palette, threshold, isDark, fetchPopulationAge, theme, extruded]);
 
   if (isLoading) {
     return <Loader />;

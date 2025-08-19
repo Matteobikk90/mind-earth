@@ -7,7 +7,7 @@ import { densityThreshold } from "@/utils/map";
 import { useShallow } from "zustand/shallow";
 
 export default function Filters() {
-  const { palette, setPalette, threshold, toggleThreshold } = useStore(
+  const { palette, setPalette, threshold, toggleThreshold, toggleExtruded, extruded } = useStore(
     useShallow((state) => ({
       ...state,
     }))
@@ -42,6 +42,17 @@ export default function Filters() {
         />
         <label htmlFor="density-filter">Exclude density &lt; {densityThreshold}</label>
       </div>
+
+      <label htmlFor="extruded-filter" className="flex items-center gap-2">
+        <input
+          id="extruded-filter"
+          type="checkbox"
+          checked={extruded}
+          onChange={toggleExtruded}
+          className="border-foreground/30 accent-primary h-4 w-4 rounded"
+        />
+        <span>Extruded 3D</span>
+      </label>
     </aside>
   );
 }
